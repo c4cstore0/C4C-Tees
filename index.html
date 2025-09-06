@@ -46,8 +46,16 @@ a{text-decoration:none;color:inherit;}
 }
 
 .hero{
-  padding:20px;
+  position:relative;
   text-align:center;
+  margin-bottom:20px;
+}
+.cover-photo{
+  width:100%;
+  height:200px;
+  background:#eee url('https://via.placeholder.com/1200x200?text=Cover+Photo') center/cover no-repeat;
+  border-radius:10px;
+  margin:0 auto 12px auto;
 }
 .hero h1{
   font-size:36px;
@@ -56,8 +64,8 @@ a{text-decoration:none;color:inherit;}
 .tagline{
   font-size:14px;
   color:#555;
-  margin-bottom:12px;
 }
+
 .btn{
   background:var(--gold);
   color:#111;
@@ -133,8 +141,6 @@ a{text-decoration:none;color:inherit;}
 .card-body .desc{color:var(--muted);font-size:14px;}
 .card-body .price{color:var(--gold);font-weight:700;margin-top:8px;}
 .card-actions{display:flex;gap:10px;margin-top:12px;}
-.cart-list{margin-top:12px;}
-.cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee;}
 
 .footer{
   background:#111;
@@ -144,6 +150,7 @@ a{text-decoration:none;color:inherit;}
 }
 .footer a{color:var(--gold);margin:0 6px;}
 
+/* Admin */
 .admin-trigger{
   position:fixed;
   right:12px;
@@ -178,6 +185,43 @@ a{text-decoration:none;color:inherit;}
 .tool-btn{padding:8px 10px;border-radius:8px;background:#333;color:var(--gold);border:none;cursor:pointer;margin-top:8px;}
 .admin-list{margin-top:12px;}
 .admin-item{padding:10px;border-radius:8px;border:1px solid #333;margin-bottom:8px;background:#222;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+
+/* Cart */
+.cart{
+  position:fixed;
+  top:12px;
+  right:12px;
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:10px;
+  width:260px;
+  max-height:400px;
+  overflow:auto;
+  box-shadow:0 8px 24px rgba(0,0,0,0.2);
+  padding:12px;
+  display:none;
+  z-index:4000;
+}
+.cart-header{
+  display:flex;
+  justify-content:space-between;
+  font-weight:700;
+  margin-bottom:8px;
+}
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px dashed #ccc;
+  padding:6px 0;
+}
+.cart-item button{
+  background:red;color:#fff;border:none;padding:2px 6px;border-radius:6px;cursor:pointer;
+}
+.cart-total{
+  font-weight:700;
+  margin-top:8px;
+  text-align:right;
+}
 </style>
 </head>
 <body>
@@ -191,12 +235,17 @@ a{text-decoration:none;color:inherit;}
 </div>
 
 <section class="hero">
-  <h1>C4C Tees</h1>
-  <div class="tagline">Premium Cotton Tees — Bold Designs for Your Faith & Vibe.</div>
+  <div class="cover-photo"></div>
 </section>
 
 <div class="filters" id="filters"></div>
 <div class="grid" id="grid"></div>
+
+<div class="cart" id="cart">
+  <div class="cart-header">Cart <button onclick="toggleCart()">X</button></div>
+  <div id="cartItems"></div>
+  <div class="cart-total" id="cartTotal">$0</div>
+</div>
 
 <button class="admin-trigger" id="adminTrigger">A</button>
 <div class="admin-panel" id="adminPanel">
@@ -274,7 +323,7 @@ function renderGrid(){
     const d = document.createElement("div"); d.className="desc"; d.innerText=p.desc;
     const pr = document.createElement("div"); pr.className="price"; pr.innerText="$"+p.price;
     const btnAdd = document.createElement("button"); btnAdd.className="btn"; btnAdd.innerText="Add to Cart";
-    btnAdd.onclick=()=>{cart.push(p);alert(p.name+" added to cart"); renderCart();}
+    btnAdd.onclick=()=>{cart.push(p);renderCart();}
     body.appendChild(h3); body.appendChild(d); body.appendChild(pr); body.appendChild(btnAdd);
     card.appendChild(body);
     g.appendChild(card);
@@ -282,9 +331,24 @@ function renderGrid(){
 }
 
 function renderCart(){
-  console.log("Cart Items:",cart);
-  // You can expand this to a modal/cart drawer if needed
+  const c = document.getElementById("cart");
+  const itemsDiv = document.getElementById("cartItems");
+  const totalDiv = document.getElementById("cartTotal");
+  if(cart.length===0){c.style.display="none";return;}
+  c.style.display="block";
+  itemsDiv.innerHTML="";
+  let total=0;
+  cart.forEach((p,i)=>{
+    total+=parseFloat(p.price);
+    const row = document.createElement("div"); row.className="cart-item";
+    row.innerHTML=`${p.name} - $${p.price} <button onclick="removeFromCart(${i})">X</button>`;
+    itemsDiv.appendChild(row);
+  });
+  totalDiv.innerText="Total: $"+total;
 }
+
+function toggleCart(){document.getElementById("cart").style.display="none";}
+function removeFromCart(idx){cart.splice(idx,1);renderCart();}
 
 // Admin
 document.getElementById("adminTrigger").onclick=()=>{
