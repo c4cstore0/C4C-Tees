@@ -22,6 +22,9 @@ a{color:inherit;text-decoration:none}
 .logo-placeholder{width:54px;height:54px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6c200);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111}
 .brand-title{font-family:"Old London",serif;font-size:28px;letter-spacing:0.6px}
 .brand-sub{color:#ddd;font-size:14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.nav button{background:transparent;border:1px solid rgba(255,215,0,0.12);color:var(--gold);padding:8px 12px;border-radius:999px;cursor:pointer}
+.nav button.active,.nav button:hover{background:var(--gold);color:var(--black);border-color:transparent}
 
 /* Hero */
 .hero{padding:20px 20px;background:linear-gradient(180deg,var(--white),#faf8f2);border-bottom:1px solid rgba(0,0,0,0.04)}
@@ -48,11 +51,9 @@ a{color:inherit;text-decoration:none}
 .card h3{margin:6px 0;font-size:18px}
 .desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1}
 .price{color:var(--gold);font-weight:700;margin-top:10px}
+.tap-back{font-size:12px;color:#555;margin-top:4px;font-style:italic}
 .card-actions{display:flex;gap:10px;margin-top:12px}
 .small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
-.tap-back{position:absolute;bottom:6px;right:6px;background:rgba(0,0,0,0.4);color:#fff;padding:2px 6px;font-size:12px;border-radius:6px}
-
-/* Buttons */
 .btn{background:var(--gold);color:var(--black);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
 .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--black)}
 
@@ -66,13 +67,20 @@ a{color:inherit;text-decoration:none}
 .cart-footer a{display:block;text-align:center;background:var(--gold);color:#000;padding:10px;border-radius:12px;font-weight:700;text-decoration:none}
 
 /* Admin */
-.admin-trigger{display:block;width:100%;padding:12px;background:var(--black);color:var(--gold);border:none;font-weight:700;cursor:pointer;margin-top:20px;border-radius:0}
+.admin-trigger{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;background:#111;border:none;padding:6px 8px;border-radius:999px;font-size:13px;color:#fff;cursor:pointer;z-index:2500;opacity:1}
 .admin-panel{display:none;position:fixed;bottom:0;width:100%;max-height:85vh;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto;z-index:2500}
 .admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px;flex-wrap:wrap}
 .admin-form{flex:1;min-width:280px}
+.admin-preview{flex:1;min-width:320px;border-left:1px solid #eee;padding-left:12px}
+.label{font-size:13px;color:#444;margin-top:8px}
+.input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:6px}
+.row{display:flex;gap:8px}
+.muted{color:var(--muted);font-size:13px}
+.tiny{font-size:12px;color:#777}
 .admin-list{margin-top:12px}
 .admin-item{padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:8px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.tool-btn{padding:6px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:none;cursor:pointer}
+.admin-item small{color:#888}
+.tool-btn{padding:8px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:none;cursor:pointer}
 
 /* Footer */
 footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:center;margin-top:18px}
@@ -119,6 +127,13 @@ footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:ce
   </div>
 </div>
 
+<!-- Footer -->
+<footer>
+  Contact: <a href="tel:+231880466699" style="color:#ffd700;">0880466699 (MTN MoMo)</a> | 
+  <a href="tel:+231776839092" style="color:#ffd700;">0776839092 (Orange Money)</a><br>
+  © 2025 C4C Tees
+</footer>
+
 <!-- Admin Trigger -->
 <button class="admin-trigger" id="adminTrigger">Admin</button>
 
@@ -152,13 +167,6 @@ footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:ce
   </div>
 </div>
 
-<!-- Footer -->
-<footer>
-  Contact: <a href="tel:+231880466699" style="color:#ffd700;">0880466699 (MTN MoMo)</a> | 
-  <a href="tel:+231776839092" style="color:#ffd700;">0776839092 (Orange Money)</a><br>
-  © 2025 C4C Tees
-</footer>
-
 <script>
 // --- ADMIN PANEL LOGIC ---
 let adminPassword = "78847@june";
@@ -173,10 +181,161 @@ document.getElementById('adminTrigger').addEventListener('click', ()=>{
   document.getElementById('adminPanel').style.display='block';
 });
 
+// Close admin
 function closeAdmin(){document.getElementById('adminPanel').style.display='none'}
 
-// --- CATEGORIES & PRODUCTS ---
+// --- CATEGORIES ---
 let categories = ["Tees","Hoodies","Kids","All"];
 let products = [
   {name:"Jesus Tee",desc:"Bold Faith Tee",price:"$25",category:"Tees",imgFront:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400",imgBack:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400"},
-  {name:"Holy Hoodie",desc:"Warm & Cozy",price:"$40",category:"Hoodies",imgFront:"https://images.unsplash.com/photo-161835469484
+  {name:"Holy Hoodie",desc:"Warm & Cozy",price:"$40",category:"Hoodies",imgFront:"https://images.unsplash.com/photo-1618354694841-4f0d2f13dbdf?w=400",imgBack:"https://images.unsplash.com/photo-1618354694841-4f0d2f13dbdf?w=400"},
+  {name:"Kids Tee",desc:"Fun & Soft",price:"$20",category:"Kids",imgFront:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400",imgBack:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400"}
+];
+
+// --- RENDER CATEGORIES ---
+function renderCategories(){
+  const filterEl = document.getElementById('filters');
+  filterEl.innerHTML='';
+  categories.forEach((cat,i)=>{
+    let btn=document.createElement('button');
+    btn.textContent=cat;
+    btn.className=i===0?"active":"";
+    btn.onclick=()=>{
+      document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      filterProducts(cat);
+    }
+    filterEl.appendChild(btn);
+  });
+}
+renderCategories();
+
+// --- FILTER PRODUCTS ---
+function filterProducts(cat){
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  let filtered=cat==="All"?products:products.filter(p=>p.category===cat);
+  filtered.forEach((p,i)=>{
+    let card=document.createElement('div');card.className='card';
+    card.innerHTML=`
+      <div class="card-media">
+        <img src="${p.imgFront}" class="front">
+        <img src="${p.imgBack}" class="back" style="transform:rotateY(180deg);position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden">
+      </div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <div class="desc">${p.desc}</div>
+        <div class="tap-back">Tap to view back</div>
+        <div class="price">${p.price}</div>
+        <div class="card-actions">
+          <button class="small-btn" onclick="addToCart(${i})">Add to Cart</button>
+        </div>
+      </div>
+    `;
+    let media=card.querySelector('.card-media');
+    let front=media.querySelector('.front');
+    let back=media.querySelector('.back');
+    card.onmouseenter=()=>{front.style.transform='rotateY(180deg)';back.style.transform='rotateY(0deg)';}
+    card.onmouseleave=()=>{front.style.transform='rotateY(0deg)';back.style.transform='rotateY(180deg)';}
+    grid.appendChild(card);
+  });
+}
+filterProducts("All");
+
+// --- ADMIN CATEGORY RENDER ---
+function renderAdminCategories(){
+  const el=document.getElementById('adminCategories');el.innerHTML='';
+  categories.forEach((c,i)=>{
+    let div=document.createElement('div');div.className='admin-item';
+    div.innerHTML=`<input type="text" value="${c}" onchange="updateCategory(${i},this.value)"> <button class="tool-btn" onclick="deleteCategory(${i})">Del</button>`;
+    el.appendChild(div);
+  });
+}
+function updateCategory(i,val){categories[i]=val;renderCategories();}
+renderAdminCategories();
+
+// --- CATEGORY FUNCTIONS ---
+function addCategory(){
+  let val=document.getElementById('newCategory').value;
+  if(val){categories.push(val);renderCategories();renderAdminCategories();document.getElementById('newCategory').value='';}
+}
+function deleteCategory(i){categories.splice(i,1);renderCategories();renderAdminCategories();}
+
+// --- ADMIN PRODUCTS ---
+function renderAdminProducts(){
+  const el=document.getElementById('adminProducts');el.innerHTML='';
+  products.forEach((p,i)=>{
+    let div=document.createElement('div');div.className='admin-item';
+    div.innerHTML=`
+      <input type="text" value="${p.name}" onchange="updateProductName(${i},this.value)">
+      <input type="text" value="${p.imgFront}" onchange="updateProductImg(${i},this.value)">
+      <span>(${p.category})</span>
+      <button class="tool-btn" onclick="deleteProduct(${i})">Del</button>
+    `;
+    el.appendChild(div);
+  });
+}
+function updateProductName(i,val){products[i].name=val;filterProducts("All");}
+function updateProductImg(i,val){products[i].imgFront=val;products[i].imgBack=val;filterProducts("All");}
+renderAdminProducts();
+
+function addProduct(){
+  products.push({name:"New Product",desc:"Description",price:"$0",category:categories[0],imgFront:"https://via.placeholder.com/400",imgBack:"https://via.placeholder.com/400"});
+  renderAdminProducts();filterProducts("All");
+}
+function deleteProduct(i){products.splice(i,1);renderAdminProducts();filterProducts("All");}
+
+// --- COVER PHOTO & DESCRIPTION ---
+document.getElementById('adminCoverDesc').value=document.getElementById('coverDesc').textContent;
+document.getElementById('adminCoverImg').value=document.querySelector('.cover-photo img').src;
+document.getElementById('adminCoverDesc').addEventListener('input',(e)=>{document.getElementById('coverDesc').textContent=e.target.value;})
+document.getElementById('adminCoverImg').addEventListener('input',(e)=>{document.querySelector('.cover-photo img').src=e.target.value;})
+
+// --- SAVE CHANGES (LOCALSTORAGE) ---
+function saveChanges(){
+  localStorage.setItem('c4c_coverDesc',document.getElementById('coverDesc').textContent);
+  localStorage.setItem('c4c_coverImg',document.querySelector('.cover-photo img').src);
+  localStorage.setItem('c4c_categories',JSON.stringify(categories));
+  localStorage.setItem('c4c_products',JSON.stringify(products));
+  alert('Changes saved!');
+}
+
+// --- CART LOGIC ---
+let cart=[];
+function addToCart(i){
+  cart.push(products[i]);
+  renderCart();
+  openCart();
+}
+function renderCart(){
+  const el=document.getElementById('cartList');
+  el.innerHTML='';
+  cart.forEach((p,i)=>{
+    let div=document.createElement('div');div.className='cart-row';
+    div.innerHTML=`${p.name} <strong>${p.price}</strong> <button onclick="removeFromCart(${i})" class="tool-btn">X</button>`;
+    el.appendChild(div);
+  });
+  updateCheckout();
+}
+function removeFromCart(i){cart.splice(i,1);renderCart();}
+function updateCheckout(){
+  let msg='Order Details:\n';
+  cart.forEach(p=>{msg+=`${p.name} - ${p.price}\n`;})
+  msg+=`\nPay via MTN MoMo 0880466699 or Orange Money 0776839092`;
+  document.getElementById('checkoutBtn').href='https://wa.me/231880466699?text='+encodeURIComponent(msg);
+}
+function openCart(){document.getElementById('cartDrawer').classList.add('open');}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');}
+
+// --- LOAD LOCALSTORAGE ---
+if(localStorage.getItem('c4c_coverDesc')) document.getElementById('coverDesc').textContent=localStorage.getItem('c4c_coverDesc');
+if(localStorage.getItem('c4c_coverImg')) document.querySelector('.cover-photo img').src=localStorage.getItem('c4c_coverImg');
+if(localStorage.getItem('c4c_categories')) categories=JSON.parse(localStorage.getItem('c4c_categories'));
+if(localStorage.getItem('c4c_products')) products=JSON.parse(localStorage.getItem('c4c_products'));
+renderCategories();
+renderAdminCategories();
+renderAdminProducts();
+filterProducts("All");
+</script>
+</body>
+</html>
