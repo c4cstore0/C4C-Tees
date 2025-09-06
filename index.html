@@ -1,193 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>C4C Tees — Modern Shop</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>C4C Tees</title>
 <style>
-:root{
-  --gold:#ffd700;
-  --black:#000;
-  --white:#fff;
-  --muted:#6b6b6b;
-  --card-shadow:0 6px 24px rgba(11,11,11,0.08);
-  --radius:12px;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;font-family:Inter,system-ui,Arial,sans-serif;background:var(--white);color:#111;}
-a{color:inherit;text-decoration:none;}
-/* Header */
-.topbar{background:var(--black);color:var(--gold);padding:12px 20px;display:flex;align-items:center;gap:12px;}
-.logo-placeholder{width:50px;height:50px;background:linear-gradient(135deg,var(--gold),#e6c200);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#111;}
-.brand-title{font-family:"Old London",serif;font-size:26px;letter-spacing:0.5px;}
-.brand-sub{color:#ddd;font-size:14px;}
-/* Hero */
-.hero{padding:20px;background:linear-gradient(180deg,var(--white),#faf8f2);border-bottom:1px solid rgba(0,0,0,0.05);}
-.hero-wrap{max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;}
-.hero-content{flex:1;min-width:280px;}
-.hero-content h1{font-family:"Old London",serif;font-size:38px;color:var(--black);margin-bottom:6px;}
-.hero-content .tagline{font-size:14px;color:var(--muted);margin-bottom:12px;}
-.hero-ctas{display:flex;gap:10px;margin-bottom:12px;}
-.btn{background:var(--gold);color:var(--black);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer;}
-.btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--black);}
-.hero-image{max-width:360px;background:#fff;padding:14px;border-radius:12px;border:1px solid #eee;}
-.hero-image img{width:100%;border-radius:8px;display:block;margin-bottom:8px;}
-.hero-image .hero-text{font-weight:700;color:var(--gold);font-size:14px;}
-/* Catalog */
-.container{max-width:1200px;margin:20px auto;padding:0 16px;}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
-.filter{padding:8px 12px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer;}
-.filter.active{background:var(--gold);color:var(--black);border-color:transparent;}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
-@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero-content{max-width:100%}}
-@media(max-width:600px){.grid{grid-template-columns:1fr}.hero-content h1{font-size:28px}}
-.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;cursor:pointer;position:relative;}
+:root{--gold:#ffd700;--black:#000;--white:#fff;--muted:#555;--card-shadow:0 6px 24px rgba(11,11,11,0.08);--radius:12px;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
+body{background:#fff;color:#111;}
+a{text-decoration:none;color:inherit;}
+.topbar{display:flex;align-items:center;padding:12px 20px;background:#111;color:var(--gold);}
+.logo-placeholder{width:50px;height:50px;background:var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#111;}
+.brand-title{font-size:26px;margin-left:10px;}
+.brand-sub{font-size:14px;color:#ddd;margin-left:10px;}
+.hero{padding:20px;text-align:center;}
+.hero h1{font-size:36px;margin-bottom:6px;}
+.tagline{font-size:14px;color:#555;margin-bottom:12px;}
+.btn{background:var(--gold);color:#111;padding:10px 16px;border:none;border-radius:10px;font-weight:700;cursor:pointer;}
+.btn.secondary{background:#fff;border:1px solid #eee;}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;justify-content:center;}
+.filter{padding:8px 12px;border-radius:999px;border:1px solid #eee;cursor:pointer;}
+.filter.active{background:var(--gold);color:#111;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;padding:0 16px;}
+.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);transition:transform .2s;}
 .card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(11,11,11,0.12);}
-.card-media{position:relative;width:100%;padding-top:120%;perspective:1000px;}
+.card-media{position:relative;width:100%;padding-top:120%;perspective:1000px;cursor:pointer;}
 .card-media-inner{position:absolute;inset:0;transition:transform .6s;transform-style:preserve-3d;}
 .card-media.flipped .card-media-inner{transform:rotateY(180deg);}
 .card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--radius);}
 .card-media img.back{transform:rotateY(180deg);}
-.card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column;}
-.title-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.card h3{margin:6px 0;font-size:18px;}
-.desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1;}
-.price{color:var(--gold);font-weight:700;margin-top:10px;}
+.card-body{padding:12px;}
+.card-body h3{font-size:18px;margin:6px 0;}
+.card-body .desc{color:var(--muted);font-size:14px;}
+.card-body .price{color:var(--gold);font-weight:700;margin-top:8px;}
 .card-actions{display:flex;gap:10px;margin-top:12px;}
-.small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer;}
-/* Lightbox */
-.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;z-index:2000;}
-.lightbox img{max-width:94%;max-height:88%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6);}
-/* Cart modal */
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;align-items:center;justify-content:center;padding:18px;}
-.modal-box{background:var(--white);width:100%;max-width:560px;border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.12);max-height:90vh;overflow:auto;}
-.modal-head{display:flex;align-items:center;justify-content:space-between;}
 .cart-list{margin-top:12px;}
-.cart-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee;}
-/* Admin button */
-.admin-trigger{position:fixed;right:12px;bottom:12px;background:#111;border:1px solid #111;padding:6px 8px;border-radius:999px;font-size:12px;cursor:pointer;color:#111;opacity:0.3;z-index:3000;}
+.cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee;}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:1500;}
+.modal-box{background:#fff;width:100%;max-width:560px;border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.12);max-height:90vh;overflow:auto;}
+.admin-trigger{position:fixed;right:12px;bottom:12px;background:#111;border:1px solid #111;padding:6px 8px;border-radius:999px;font-size:12px;cursor:pointer;color:#111;opacity:0.2;z-index:3000;}
 .admin-panel{display:none;position:fixed;right:0;bottom:0;width:100%;max-height:85vh;z-index:2500;background:#111;color:#fff;border-top:4px solid var(--gold);overflow:auto;}
 .admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px;flex-wrap:wrap;}
 .admin-form{flex:1;min-width:280px;}
-.admin-preview{flex:1;min-width:320px;border-left:1px solid #333;padding-left:12px;}
-.label{font-size:13px;color:#ddd;margin-top:8px;}
 .input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #444;margin-top:6px;background:#222;color:#fff;}
-.row{display:flex;gap:8px;}
-.muted{color:#aaa;font-size:13px;}
-.tiny{font-size:12px;color:#777;}
+.tool-btn{padding:8px 10px;border-radius:8px;background:#333;color:var(--gold);border:none;cursor:pointer;margin-top:8px;}
 .admin-list{margin-top:12px;}
 .admin-item{padding:10px;border-radius:8px;border:1px solid #333;margin-bottom:8px;background:#222;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-.admin-item small{color:#888;}
-.tool-btn{padding:8px 10px;border-radius:8px;background:#333;color:var(--gold);border:none;cursor:pointer;}
-footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:center;margin-top:18px;font-size:14px;}
-footer a{color:var(--gold);margin-right:8px;}
 </style>
 </head>
 <body>
 
-<!-- Topbar -->
 <div class="topbar">
   <div class="logo-placeholder">C4C</div>
   <div>
     <div class="brand-title">C4C Tees</div>
-    <div class="brand-sub">Christian-themed apparel • Monrovia, Liberia</div>
+    <div class="brand-sub">Faith. Vibe. Everyday.</div>
   </div>
 </div>
 
-<!-- Hero -->
 <section class="hero">
-  <div class="hero-wrap">
-    <div class="hero-content">
-      <h1>C4C Tees</h1>
-      <div class="tagline">Faith. Vibe. Everyday.</div>
-      <div class="hero-ctas">
-        <button class="btn" onclick="document.getElementById('gridScrollTarget').scrollIntoView({behavior:'smooth'})">Shop Collections</button>
-        <button class="btn secondary" onclick="openCart()">View Cart</button>
-      </div>
-    </div>
-    <div class="hero-image">
-      <img id="heroImg" src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop" alt="model">
-      <div class="hero-text" contenteditable="true">Premium Cotton Tees — Bold Designs for Your Faith & Vibe.</div>
-    </div>
-  </div>
+  <h1>C4C Tees</h1>
+  <div class="tagline">Premium Cotton Tees — Bold Designs for Your Faith & Vibe.</div>
+  <button class="btn" onclick="document.getElementById('gridScrollTarget').scrollIntoView({behavior:'smooth'})">Shop Now</button>
 </section>
 
-<!-- Catalog -->
-<div class="container" id="gridScrollTarget">
-  <div class="filters" id="filters"></div>
-  <div class="grid" id="grid"></div>
-</div>
+<div class="filters" id="filters"></div>
+<div class="grid" id="grid"></div>
 
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt="preview"></div>
-
-<!-- Cart modal -->
-<div class="modal" id="cartModal" aria-hidden="true">
-  <div class="modal-box" role="dialog" aria-modal="true">
-    <div class="modal-head">
-      <h3>Your Cart</h3>
-      <button class="tool-btn" onclick="closeCart()">Close</button>
-    </div>
+<div class="modal" id="cartModal">
+  <div class="modal-box">
+    <h3>Your Cart</h3>
     <div class="cart-list" id="cartList"></div>
-    <div style="margin-top:12px">
-      <strong>Payment</strong>
-      <div class="muted tiny">Send payment using mobile money and WhatsApp proof.</div>
-      <p><strong>Lonestar MoMo:</strong> <a href="tel:0880466699">0880466699</a></p>
-      <p><strong>Orange Money:</strong> <a href="tel:0776839092">0776839092</a></p>
-      <p><strong>WhatsApp:</strong> <a href="https://wa.me/2310776839092" target="_blank">0776839092</a></p>
-    </div>
+    <button class="tool-btn" onclick="closeCart()">Close</button>
   </div>
 </div>
 
-<!-- Footer -->
-<footer>
-  © 2025 C4C Tees
-</footer>
-
-<!-- Admin trigger -->
 <button class="admin-trigger" id="adminTrigger">A</button>
-
-<!-- Admin panel -->
-<div class="admin-panel" id="adminPanel" aria-hidden="true">
+<div class="admin-panel" id="adminPanel">
   <div class="admin-inner">
     <div class="admin-form">
-      <h3>Admin — Catalog Manager</h3>
+      <h3>Admin Panel</h3>
       <div class="label">Categories</div>
       <div id="adminCategories"></div>
       <button class="tool-btn" onclick="addCategory()">Add Category</button>
-
-      <div class="label">Product Editor</div>
-      <input class="input" id="prodName" placeholder="Product name">
-      <textarea id="prodDesc" class="input" rows="3" placeholder="Description"></textarea>
-      <input class="input" id="prodPrice" placeholder="Price (numeric)">
-      <select id="prodCategory" class="input"></select>
-      <div class="label">Front & Back Images</div>
-      <input class="input" id="prodFrontUrl" placeholder="Front image URL or /images/filename.jpg">
-      <input class="input" id="prodBackUrl" placeholder="Back image URL or /images/filename.jpg">
-      <div style="display:flex;gap:8px;margin-top:12px">
-        <button class="btn" onclick="saveProduct()">Save Product</button>
-        <button class="small-btn" onclick="clearEditor()">Clear</button>
-      </div>
-
-      <div class="label">Admin Preview</div>
-      <div id="adminList" class="admin-list"></div>
+      <div class="label">Add Product</div>
+      <input class="input" id="prodName" placeholder="Product Name">
+      <textarea class="input" id="prodDesc" rows="3" placeholder="Description"></textarea>
+      <input class="input" id="prodPrice" placeholder="Price">
+      <select class="input" id="prodCategory"></select>
+      <input class="input" id="prodFrontUrl" placeholder="Front Image URL">
+      <input class="input" id="prodBackUrl" placeholder="Back Image URL">
+      <button class="btn" onclick="saveProduct()">Save Product</button>
+      <div class="admin-list" id="adminList"></div>
     </div>
   </div>
 </div>
 
 <script>
-// Core data
-const ADMIN_PASSWORD="78847@june";
-let categories=["All","Tees","Hoodies","Kids"];
-let products=[
-  {name:"Jesus Is King Tee",desc:"Bold faith tee.",price:20,front:"/images/jesus-front.jpg",back:"/images/jesus-back.jpg",category:"Tees"},
-  {name:"Holy Spirit Tee",desc:"Feel the Spirit.",price:22,front:"/images/holy-front.jpg",back:"/images/holy-back.jpg",category:"Tees"},
-  {name:"Faith Hoodie",desc:"Stay warm in faith.",price:35,front:"/images/hoodie-front.jpg",back:"/images/hoodie-back.jpg",category:"Hoodies"},
-  {name:"Kids Prayer Tee",desc:"Cute and spiritual.",price:18,front:"/images/kids-front.jpg",back:"/images/kids-back.jpg",category:"Kids"},
-  {name:"Blank Tee 1",desc:"Edit via admin.",price:15,front:"/images/blank-front.jpg",back:"/images/blank-back.jpg",category:"Tees"},
-  {name:"Blank Hoodie",desc:"Edit via admin.",price:25,front:"/images/blank-hoodie-front.jpg",back:"/images/blank-hoodie-back.jpg",category:"Hoodies"},
+let categories = ["All","Tees","Hoodies","Kids"];
+let products = [
+  {name:"Jesus Is King Tee",desc:"Bold faith tee.",price:20,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Tees"},
+  {name:"Holy Spirit Tee",desc:"Feel the Spirit.",price:22,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Tees"},
+  {name:"Faith Hoodie",desc:"Stay warm in faith.",price:35,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Hoodies"},
+  {name:"Kids Prayer Tee",desc:"Cute and spiritual.",price:18,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Kids"}
 ];
-// ... rest of the JS similar to previous version (renderFilters, renderGrid, admin functions, cart, flip, etc.)
+let cart = [];
+let selectedCategory = "All";
+
+// Render filters
+function renderFilters(){
+  const f = document.getElementById("filters");
+  f.innerHTML="";
+  categories.forEach(c=>{
+    const btn = document.createElement("div");
+    btn.className="filter"+(selectedCategory===c?" active":"");
+    btn.innerText=c;
+    btn.onclick=()=>{selectedCategory=c;renderGrid();renderFilters();}
+    f.appendChild(btn);
+  });
+}
+
+// Render grid
+function renderGrid(){
+  const g = document.getElementById("grid");
+  g.innerHTML="";
+  let filtered = selectedCategory==="All"?products:products.filter(p=>p.category===selectedCategory);
+  filtered.forEach(p=>{
+    const card = document.createElement("div"); card.className="card";
+    const media = document.createElement("div"); media.className="card-media";
+    const inner = document.createElement("div"); inner.className="card-media-inner";
+    const front = document.createElement("img"); front.src=p.front;
+    const back = document.createElement("img"); back.src=p.back; back.className="back";
+    inner.appendChild(front); inner.appendChild(back); media.appendChild(inner);
+    media.onclick=()=>{media.classList.toggle("flipped");}
+    card.appendChild(media);
+    const body = document.createElement("div"); body.className="card-body";
+    const h3 = document.createElement("h3"); h3.innerText=p.name;
+    const d = document.createElement("div"); d.className="desc"; d.innerText=p.desc;
+    const pr = document.createElement("div"); pr.className="price"; pr.innerText="$"+p.price;
+    const actions = document.createElement("div"); actions.className="card-actions";
+    const addBtn = document.createElement("button"); addBtn.className="small-btn"; addBtn.innerText="Add to Cart"; addBtn.onclick=()=>{cart.push(p);renderCart();}
+    actions.appendChild(addBtn);
+    body.appendChild(h3); body.appendChild(d); body.appendChild(pr); body.appendChild(actions);
+    card.appendChild(body);
+    g.appendChild(card);
+  });
+}
+
+// Cart
+function renderCart(){
+  const cl = document.getElementById("cartList"); cl.innerHTML="";
+  cart.forEach((p,i)=>{
+    const row = document.createElement("div"); row.className="cart-row";
+    row.innerHTML=`<span>${p.name}</span><span>$${p.price}</span>`;
+    cl.appendChild(row);
+  });
+}
+function openCart(){document.getElementById("cartModal").style.display="flex";}
+function closeCart(){document.getElementById("cartModal").style.display="none";}
+
+// Admin
+document.getElementById("adminTrigger").onclick=()=>{
+  const pass=prompt("Enter admin password:");
+  if(pass==="78847@june"){document.getElementById("adminPanel").style.display="block";}
+}
+function addCategory(){
+  const name=prompt("New category name:"); if(name){categories.push(name);renderFilters();updateCategorySelect();updateAdminCategories();}
+}
+function updateCategorySelect(){
+  const s = document.getElementById("prodCategory"); s.innerHTML="";
+  categories.filter(c=>c!=="All").forEach(c=>{ const o=document.createElement("option"); o.value=c; o.innerText=c; s.appendChild(o);});
+}
+function updateAdminCategories(){
+  const div = document.getElementById("adminCategories"); div.innerHTML="";
+  categories.filter(c=>c!=="All").forEach(c=>{
+    const item = document.createElement("div"); item.className="admin-item"; item.innerHTML=`<span>${c}</span><button class="tool-btn" onclick="renameCategory('${c}')">Rename</button>`;
+    div.appendChild(item);
+  });
+}
+function renameCategory(oldName){
+  const n=prompt("Rename category:",oldName); if(n){products.forEach(p=>{if(p.category===oldName)p.category=n});categories[categories.indexOf(oldName)]=n;renderFilters();renderGrid();updateCategorySelect();updateAdminCategories();}
+}
+function saveProduct(){
+  const name=document.getElementById("prodName").value;
+  const desc=document.getElementById("prodDesc").value;
+  const price=document.getElementById("prodPrice").value;
+  const category=document.getElementById("prodCategory").value;
+  const front=document.getElementById("prodFrontUrl").value;
+  const back=document.getElementById("prodBackUrl").value;
+  if(!name||!desc||!price||!category||!front||!back){alert("Fill all fields");return;}
+  products.push({name,desc,price,category,front,back}); renderGrid();
+  document.getElementById("prodName").value=""; document.getElementById("prodDesc").value=""; document.getElementById("prodPrice").value=""; document.getElementById("prodFrontUrl").value=""; document.getElementById("prodBackUrl").value="";
+  updateAdminList();
+}
+function updateAdminList(){
+  const div = document.getElementById("adminList"); div.innerHTML="";
+  products.forEach((p,i)=>{const item=document.createElement("div"); item.className="admin-item"; item.innerHTML=`<span>${p.name} (${p.category})</span>`; div.appendChild(item);});
+}
+
+// Init
+renderFilters(); renderGrid(); updateCategorySelect(); updateAdminCategories(); updateAdminList();
 </script>
 </body>
 </html>
