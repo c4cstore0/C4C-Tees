@@ -51,7 +51,6 @@ a{color:inherit;text-decoration:none}
 .card h3{margin:6px 0;font-size:18px}
 .desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1}
 .price{color:var(--gold);font-weight:700;margin-top:10px}
-.tap-back{font-size:12px;color:#555;margin-top:4px;font-style:italic}
 .card-actions{display:flex;gap:10px;margin-top:12px}
 .small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
 .btn{background:var(--gold);color:var(--black);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
@@ -67,7 +66,7 @@ a{color:inherit;text-decoration:none}
 .cart-footer a{display:block;text-align:center;background:var(--gold);color:#000;padding:10px;border-radius:12px;font-weight:700;text-decoration:none}
 
 /* Admin */
-.admin-trigger{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;background:#111;border:none;padding:6px 8px;border-radius:999px;font-size:13px;color:#fff;cursor:pointer;z-index:2500;opacity:1}
+.admin-trigger{position:fixed;left:12px;bottom:12px;background:#111;border:none;padding:6px 8px;border-radius:999px;font-size:13px;color:#111;opacity:0.2;cursor:pointer;z-index:2500}
 .admin-panel{display:none;position:fixed;bottom:0;width:100%;max-height:85vh;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto;z-index:2500}
 .admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px;flex-wrap:wrap}
 .admin-form{flex:1;min-width:280px}
@@ -180,8 +179,6 @@ document.getElementById('adminTrigger').addEventListener('click', ()=>{
   }
   document.getElementById('adminPanel').style.display='block';
 });
-
-// Close admin
 function closeAdmin(){document.getElementById('adminPanel').style.display='none'}
 
 // --- CATEGORIES ---
@@ -200,11 +197,7 @@ function renderCategories(){
     let btn=document.createElement('button');
     btn.textContent=cat;
     btn.className=i===0?"active":"";
-    btn.onclick=()=>{
-      document.querySelectorAll('.filters button').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      filterProducts(cat);
-    }
+    btn.onclick=()=>{filterProducts(cat);}
     filterEl.appendChild(btn);
   });
 }
@@ -225,7 +218,6 @@ function filterProducts(cat){
       <div class="card-body">
         <h3>${p.name}</h3>
         <div class="desc">${p.desc}</div>
-        <div class="tap-back">Tap to view back</div>
         <div class="price">${p.price}</div>
         <div class="card-actions">
           <button class="small-btn" onclick="addToCart(${i})">Add to Cart</button>
@@ -242,43 +234,57 @@ function filterProducts(cat){
 }
 filterProducts("All");
 
-// --- ADMIN CATEGORY RENDER ---
+// --- ADMIN CATEGORY RENDER (rename) ---
 function renderAdminCategories(){
-  const el=document.getElementById('adminCategories');el.innerHTML='';
-  categories.forEach((c,i)=>{
-    let div=document.createElement('div');div.className='admin-item';
-    div.innerHTML=`<input type="text" value="${c}" onchange="updateCategory(${i},this.value)"> <button class="tool-btn" onclick="deleteCategory(${i})">Del</button>`;
+  const el = document.getElementById('adminCategories');
+  el.innerHTML = '';
+  categories.forEach((c, i) => {
+    let div = document.createElement('div');
+    div.className = 'admin-item';
+    div.innerHTML = `
+      <input type="text" value="${c}" style="flex:1;padding:6px;border-radius:6px;border:1px solid #ddd" 
+        onchange="renameCategory(${i}, this.value)">
+      <button class="tool-btn" onclick="deleteCategory(${i})">Del</button>
+    `;
     el.appendChild(div);
   });
 }
-function updateCategory(i,val){categories[i]=val;renderCategories();}
-renderAdminCategories();
-
-// --- CATEGORY FUNCTIONS ---
+function renameCategory(index, newName){
+  if(newName.trim()!==""){
+    categories[index] = newName.trim();
+    renderCategories();
+  }
+}
 function addCategory(){
   let val=document.getElementById('newCategory').value;
   if(val){categories.push(val);renderCategories();renderAdminCategories();document.getElementById('newCategory').value='';}
 }
 function deleteCategory(i){categories.splice(i,1);renderCategories();renderAdminCategories();}
 
-// --- ADMIN PRODUCTS ---
+// --- ADMIN PRODUCTS (edit) ---
 function renderAdminProducts(){
-  const el=document.getElementById('adminProducts');el.innerHTML='';
-  products.forEach((p,i)=>{
-    let div=document.createElement('div');div.className='admin-item';
-    div.innerHTML=`
-      <input type="text" value="${p.name}" onchange="updateProductName(${i},this.value)">
-      <input type="text" value="${p.imgFront}" onchange="updateProductImg(${i},this.value)">
-      <span>(${p.category})</span>
+  const el = document.getElementById('adminProducts'); 
+  el.innerHTML = '';
+  products.forEach((p, i) => {
+    let div = document.createElement('div');
+    div.className = 'admin-item';
+    div.innerHTML = `
+      <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+        <input type="text" value="${p.name}" onchange="updateProduct(${i}, 'name', this.value)">
+        <input type="text" value="${p.desc}" onchange="updateProduct(${i}, 'desc', this.value)">
+        <input type="text" value="${p.price}" onchange="updateProduct(${i}, 'price', this.value)">
+        <input type="text" value="${p.imgFront}" placeholder="Front Image URL" onchange="updateProduct(${i}, 'imgFront', this.value)">
+        <input type="text" value="${p.imgBack}" placeholder="Back Image URL" onchange="updateProduct(${i}, 'imgBack', this.value)">
+      </div>
       <button class="tool-btn" onclick="deleteProduct(${i})">Del</button>
     `;
     el.appendChild(div);
   });
 }
-function updateProductName(i,val){products[i].name=val;filterProducts("All");}
-function updateProductImg(i,val){products[i].imgFront=val;products[i].imgBack=val;filterProducts("All");}
-renderAdminProducts();
-
+function updateProduct(index, field, value){
+  products[index][field] = value;
+  filterProducts("All");
+}
 function addProduct(){
   products.push({name:"New Product",desc:"Description",price:"$0",category:categories[0],imgFront:"https://via.placeholder.com/400",imgBack:"https://via.placeholder.com/400"});
   renderAdminProducts();filterProducts("All");
@@ -291,7 +297,7 @@ document.getElementById('adminCoverImg').value=document.querySelector('.cover-ph
 document.getElementById('adminCoverDesc').addEventListener('input',(e)=>{document.getElementById('coverDesc').textContent=e.target.value;})
 document.getElementById('adminCoverImg').addEventListener('input',(e)=>{document.querySelector('.cover-photo img').src=e.target.value;})
 
-// --- SAVE CHANGES (LOCALSTORAGE) ---
+// --- SAVE CHANGES ---
 function saveChanges(){
   localStorage.setItem('c4c_coverDesc',document.getElementById('coverDesc').textContent);
   localStorage.setItem('c4c_coverImg',document.querySelector('.cover-photo img').src);
@@ -302,14 +308,9 @@ function saveChanges(){
 
 // --- CART LOGIC ---
 let cart=[];
-function addToCart(i){
-  cart.push(products[i]);
-  renderCart();
-  openCart();
-}
+function addToCart(i){cart.push(products[i]);renderCart();openCart();}
 function renderCart(){
-  const el=document.getElementById('cartList');
-  el.innerHTML='';
+  const el=document.getElementById('cartList'); el.innerHTML='';
   cart.forEach((p,i)=>{
     let div=document.createElement('div');div.className='cart-row';
     div.innerHTML=`${p.name} <strong>${p.price}</strong> <button onclick="removeFromCart(${i})" class="tool-btn">X</button>`;
