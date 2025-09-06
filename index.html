@@ -5,281 +5,161 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>C4C Tees — Modern Shop</title>
 <style>
-  :root{
-    --gold:#ffd700;
-    --black:#000;
-    --white:#fff;
-    --muted:#6b6b6b;
-    --card-shadow:0 6px 24px rgba(11,11,11,0.08);
-    --radius:12px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--white);color:#111}
-  a{color:inherit;text-decoration:none}
-  button{font-family:inherit}
-  /* Header */
-  .topbar{background:var(--black);color:var(--gold);padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .logo-placeholder{width:50px;height:50px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6c200);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111;flex-shrink:0}
-  .brand-title{font-family:"Old London",serif;font-size:28px;letter-spacing:0.6px}
-  .brand-sub{color:#ddd;font-size:14px;margin-top:2px}
-  .categories{display:flex;gap:10px;flex-wrap:wrap;width:100%;margin-top:8px}
-  .categories button{padding:8px 12px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer}
-  .categories button.active, .categories button:hover{background:var(--gold);color:var(--black);border-color:transparent}
-  /* Hero */
-  .hero{padding:24px 16px;background:linear-gradient(180deg,var(--white),#faf8f2);border-bottom:1px solid rgba(0,0,0,0.04)}
-  .hero-wrap{max-width:1200px;margin:0 auto;display:flex;gap:24px;flex-wrap:wrap;align-items:center;justify-content:center}
-  .hero-content{max-width:600px;text-align:center}
-  .hero h1{margin:0;font-family:"Old London",serif;font-size:36px;color:var(--black)}
-  .hero p{color:var(--muted);margin-top:4px;font-size:16px}
-  .hero-ctas{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .btn{background:var(--gold);color:var(--black);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--black)}
-  /* Grid */
-  .container{max-width:1200px;margin:0 auto;padding:16px}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:600px){.grid{grid-template-columns:1fr}}
-  .card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
-  .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(11,11,11,0.12)}
-  .card-media{position:relative;height:0;padding-bottom:120%;overflow:hidden}
-  .card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:pointer;transition:opacity .18s}
-  .card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column}
-  .title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .card h3{margin:6px 0;font-size:18px}
-  .desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1}
-  .price{color:var(--gold);font-weight:700;margin-top:10px}
-  .card-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-  .small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
-  /* Lightbox */
-  .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;z-index:2000}
-  .lightbox img{max-width:94%;max-height:88%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-  /* Cart modal */
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;align-items:center;justify-content:center;padding:16px}
-  .modal-box{background:var(--white);width:100%;max-width:560px;border-radius:14px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,0.12);max-height:90vh;overflow:auto}
-  .modal-head{display:flex;align-items:center;justify-content:space-between}
-  .cart-list{margin-top:12px}
-  .cart-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
-  /* Footer */
-  footer{padding:14px 16px;background:var(--black);color:var(--gold);text-align:center;margin-top:18px;display:flex;flex-direction:column;gap:6px}
-  footer a{color:var(--gold)}
-  /* Admin trigger */
-  .admin-trigger{position:fixed;right:12px;bottom:12px;background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.1);padding:6px 8px;border-radius:999px;font-size:12px;cursor:pointer;color:#fff;opacity:0.3;transition:opacity .2s;z-index:3000}
-  .admin-trigger:hover{opacity:1}
-  /* Admin panel */
-  .admin-panel{display:none;position:fixed;right:0;bottom:0;width:100%;max-height:85vh;z-index:2500;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto}
-  .admin-inner{max-width:1200px;margin:0 auto;padding:16px;display:flex;gap:16px;flex-wrap:wrap}
-  .admin-form{flex:1;min-width:280px}
-  .admin-preview{flex:1;min-width:320px;border-left:1px solid #eee;padding-left:12px}
-  .label{font-size:13px;color:#444;margin-top:8px}
-  .input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:6px}
-  .row{display:flex;gap:8px;flex-wrap:wrap}
-  .muted{color:var(--muted);font-size:13px}
-  .tiny{font-size:12px;color:#777}
-  .admin-list{margin-top:12px}
-  .admin-item{padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:8px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .admin-item small{color:#888}
-  .tool-btn{padding:8px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:none;cursor:pointer}
+:root{
+  --gold:#ffd700;
+  --black:#000;
+  --white:#fff;
+  --muted:#6b6b6b;
+  --card-shadow:0 6px 24px rgba(11,11,11,0.08);
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:Inter,system-ui,Arial,sans-serif;background:var(--white);color:#111}
+a{color:inherit;text-decoration:none}
+/* Header */
+.topbar{background:var(--black);color:var(--gold);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo-placeholder{width:50px;height:50px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6c200);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111;font-size:16px}
+.brand-title{font-family:"Old London",serif;font-size:26px}
+.brand-sub{color:#ddd;font-size:12px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;width:100%;margin-top:8px}
+.nav button{background:transparent;border:1px solid rgba(255,215,0,0.12);color:var(--gold);padding:6px 10px;border-radius:999px;cursor:pointer;font-size:12px}
+.nav button.active,.nav button:hover{background:var(--gold);color:var(--black);border-color:transparent}
+/* Hero */
+.hero{padding:24px 16px;background:linear-gradient(180deg,var(--white),#faf8f2);border-bottom:1px solid rgba(0,0,0,0.04)}
+.hero-wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.hero h1{margin-bottom:6px;font-family:"Old London",serif;font-size:36px;color:var(--black)}
+.hero .tagline{font-size:14px;color:var(--muted)}
+.hero-feature{background:#fff;padding:14px;border-radius:12px;border:1px solid #eee;text-align:center;max-width:360px;margin:auto;box-shadow:var(--card-shadow)}
+.hero-feature img{width:100%;border-radius:8px;margin-bottom:8px}
+.hero-feature .highlight{font-weight:700;color:var(--gold);font-size:14px}
+/* Grid */
+.container{max-width:1200px;margin:20px auto;padding:0 16px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;cursor:pointer}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(11,11,11,0.12)}
+.card-media{position:relative;height:0;padding-bottom:120%;overflow:hidden;perspective:1000px}
+.card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s,opacity .3s;backface-visibility:hidden;border-radius:8px}
+.card-media img.back{transform:rotateY(180deg);position:absolute;top:0;left:0}
+.card-media.flip img.front{transform:rotateY(180deg)}
+.card-media.flip img.back{transform:rotateY(0deg)}
+.card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column}
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card h3{margin:4px 0;font-size:16px}
+.desc{color:var(--muted);font-size:13px;margin-top:6px;flex:1}
+.price{color:var(--gold);font-weight:700;margin-top:8px}
+.card-actions{display:flex;gap:8px;margin-top:10px}
+.btn{background:var(--gold);color:var(--black);border:none;padding:8px 12px;border-radius:8px;font-weight:700;cursor:pointer;font-size:12px}
+.small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 8px;border-radius:8px;cursor:pointer;font-size:12px}
+/* Lightbox */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;z-index:2000}
+.lightbox img{max-width:94%;max-height:88%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+/* Cart modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;align-items:center;justify-content:center;padding:18px}
+.modal-box{background:var(--white);width:100%;max-width:560px;border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.12);max-height:90vh;overflow:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cart-list{margin-top:8px}
+.cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee}
+/* Admin trigger & panel */
+.admin-trigger{position:fixed;right:16px;bottom:16px;background:#111;border:none;padding:8px 10px;border-radius:999px;font-size:10px;opacity:0.03;color:#fff;cursor:pointer;z-index:3000}
+.admin-panel{display:none;position:fixed;right:0;bottom:0;width:100%;max-height:85vh;z-index:2500;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto}
+.admin-inner{max-width:1200px;margin:0 auto;padding:16px;display:flex;gap:16px;flex-wrap:wrap}
+.admin-form{flex:1;min-width:280px}
+.admin-preview{flex:1;min-width:320px;border-left:1px solid #eee;padding-left:12px}
+.label{font-size:13px;color:#444;margin-top:8px}
+.input,textarea,select{width:100%;padding:8px;border-radius:6px;border:1px solid #ddd;margin-top:4px;font-size:12px}
+.row{display:flex;gap:8px}
+.muted{color:var(--muted);font-size:12px}
+.tiny{font-size:11px;color:#777}
+.admin-list{margin-top:12px}
+.admin-item{padding:8px;border-radius:6px;border:1px solid #eee;margin-bottom:8px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.admin-item small{color:#888}
+.tool-btn{padding:6px 8px;border-radius:6px;background:var(--black);color:var(--gold);border:none;cursor:pointer;font-size:11px}
+/* Footer */
+footer{padding:16px 16px;background:var(--black);color:var(--gold);text-align:center;margin-top:16px;font-size:12px}
+footer a{color:var(--gold)}
 </style>
 </head>
 <body>
 
-  <!-- Topbar -->
-  <div class="topbar">
+<div class="topbar">
+  <div class="brand">
     <div class="logo-placeholder">C4C</div>
     <div>
       <div class="brand-title">C4C Tees</div>
       <div class="brand-sub">Faith. Vibe. Everyday.</div>
     </div>
   </div>
+</div>
 
-  <!-- Categories -->
-  <div class="categories" id="categoryButtons">
-    <button class="active" data-cat="all">All</button>
-    <button data-cat="tees">Tees</button>
-    <button data-cat="hoodies">Hoodies</button>
-    <button data-cat="kids">Kids</button>
-    <button data-cat="custom">Custom</button>
-  </div>
+<div class="container" id="gridScrollTarget">
+  <div class="grid" id="grid"></div>
+</div>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-wrap">
-      <div class="hero-content">
-        <div style="max-width:360px;margin:auto">
-          <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop" style="width:100%;border-radius:12px;display:block;margin-bottom:8px" alt="model">
-          <div style="font-weight:700;color:var(--gold)">Local quality · Soft cotton</div>
-          <div class="muted tiny">Free pickup • Delivery available</div>
-        </div>
-      </div>
-      <div class="hero-ctas">
-        <button class="btn" onclick="document.getElementById('gridScrollTarget').scrollIntoView({behavior:'smooth'})">Shop Collections</button>
-        <button class="btn secondary" onclick="openCart()">View Cart</button>
-      </div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt="preview"></div>
+<div class="modal" id="cartModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <h3>Your Cart</h3>
+      <button class="tool-btn" onclick="closeCart()">Close</button>
     </div>
-  </section>
-
-  <!-- Catalog -->
-  <div class="container" id="gridScrollTarget">
-    <div class="grid" id="grid"></div>
+    <div class="cart-list" id="cartList"></div>
   </div>
+</div>
 
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt="preview"></div>
+<footer>
+  <div><strong>Contact & Payment</strong></div>
+  <div>Lonestar MoMo: <a href="tel:0880466699">0880466699</a></div>
+  <div>Orange Money: <a href="tel:0776839092">0776839092</a></div>
+  <div>WhatsApp: <a href="https://wa.me/2310776839092" target="_blank">0776839092</a></div>
+</footer>
 
-  <!-- Cart modal -->
-  <div class="modal" id="cartModal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h3>Your Cart</h3>
-        <button class="tool-btn" onclick="closeCart()">Close</button>
+<button class="admin-trigger" id="adminTrigger">Admin</button>
+<div class="admin-panel" id="adminPanel" aria-hidden="true">
+  <div class="admin-inner">
+    <div class="admin-form">
+      <h3>Admin — Catalog Manager</h3>
+      <div class="label">Rename Categories (comma separated)</div>
+      <input class="input" id="categoryRename" placeholder="tees,hoodies,kids,custom">
+      <button class="tool-btn" onclick="renameCategories()">Rename Categories</button>
+
+      <div class="label">Product Editor</div>
+      <input class="input" id="prodName" placeholder="Product name">
+      <textarea class="input" id="prodDesc" rows="3" placeholder="Description"></textarea>
+      <input class="input" id="prodPrice" placeholder="Price">
+      <select id="prodCategory" class="input">
+        <option value="tees">Tees</option>
+        <option value="hoodies">Hoodies</option>
+        <option value="kids">Kids</option>
+        <option value="custom">Custom</option>
+      </select>
+      <div class="label">Front / Back Image URL</div>
+      <input class="input" id="prodFrontUrl" placeholder="Front image URL">
+      <input class="input" id="prodBackUrl" placeholder="Back image URL">
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button class="btn" onclick="saveProduct()">Save</button>
+        <button class="small-btn" onclick="clearForm()">Clear</button>
       </div>
-      <div class="cart-list" id="cartList"></div>
-      <div style="margin-top:10px">
-        <div><strong>Payment</strong></div>
-        <div class="muted tiny">Send payment using mobile money and WhatsApp proof.</div>
-        <p style="margin:8px 0"><strong>Lonestar MoMo:</strong> <a href="tel:0880466699">0880466699</a></p>
-        <p style="margin:8px 0"><strong>Orange Money:</strong> <a href="tel:0776839092">0776839092</a></p>
-        <p style="margin:8px 0"><strong>WhatsApp:</strong> <a href="https://wa.me/2310776839092" target="_blank">0776839092</a></p>
-      </div>
+
+      <div class="admin-list" id="adminList"></div>
     </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <div>© 2025 C4C Tees</div>
-    <div>Lonestar MoMo: <a href="tel:0880466699">0880466699</a> | Orange Money: <a href="tel:0776839092">0776839092</a></div>
-    <div>WhatsApp: <a href="https://wa.me/2310776839092" target="_blank">0776839092</a></div>
-  </footer>
-
-  <!-- Admin trigger -->
-  <button class="admin-trigger" id="adminTrigger">Admin</button>
-
-  <!-- Admin panel -->
-  <div class="admin-panel" id="adminPanel" aria-hidden="true">
-    <div class="admin-inner">
-      <div class="admin-form">
-        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
-          <h3>Admin — Catalog Manager</h3>
-          <div class="tiny muted">Status: <span id="adminStatus">locked</span></div>
-        </div>
-
-        <div class="label">Product Editor</div>
-        <input class="input" id="prodName" placeholder="Product name">
-        <textarea id="prodDesc" class="input" rows="3" placeholder="Short description"></textarea>
-        <input class="input" id="prodPrice" placeholder="Price (numeric)">
-        <select id="prodCategory" class="input">
-          <option value="tees">Tees</option>
-          <option value="hoodies">Hoodies</option>
-          <option value="kids">Kids</option>
-          <option value="custom">Custom</option>
-        </select>
-
-        <div class="label">Images</div>
-        <input class="input" id="prodFrontUrl" placeholder="Front image URL or /images/file.jpg">
-        <input class="input" id="prodBackUrl" placeholder="Back image URL or /images/file.jpg">
-
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn" onclick="saveProduct()">Save Product</button>
-          <button class="small-btn" onclick="clearEditor()">Clear</button>
-        </div>
-
-      </div>
-      <div class="admin-preview">
-        <h4>Products</h4>
-        <div id="adminList" class="admin-list"></div>
-      </div>
+    <div class="admin-preview">
+      <h3>Preview</h3>
+      <div class="grid" id="adminPreview"></div>
     </div>
   </div>
+</div>
 
 <script>
-const ADMIN_PASSWORD="78847@june";
-let products=JSON.parse(localStorage.getItem('c4c_products_v2')||'null')||[
-  {name:"Jesus Is King Tee",desc:"Rock this JIK tee proudly and boldly.",price:20,front:"/images/jesus-front.jpg",back:"/images/jesus-back.jpg",category:"tees"},
-  {name:"Faith Over Fear Tee",desc:"Inspire courage with this powerful message.",price:18,front:"/images/faith-front.jpg",back:"/images/faith-back.jpg",category:"tees"}
-];
-
-function renderGrid(){
-  const grid=document.getElementById('grid');grid.innerHTML="";
-  products.forEach((p,i)=>{
-    const div=document.createElement('div');div.className='card';
-    div.innerHTML=`<div class="card-media"><img src="${p.front}" onclick="openLightbox('${p.front}')"></div>
-      <div class="card-body">
-        <div class="title-row"><h3>${p.name}</h3><span class="price">$${p.price}</span></div>
-        <div class="desc">${p.desc}</div>
-        <div class="card-actions">
-          <button class="small-btn" onclick="addToCart(${i})">Add to Cart</button>
-          <button class="small-btn" onclick="openLightbox('${p.back}')">Back</button>
-        </div>
-      </div>`;
-    grid.appendChild(div);
-  });
-}
-renderGrid();
-
-// Cart
-let cart=[];
-function addToCart(i){cart.push(products[i]);alert("Added to cart");}
-function openCart(){document.getElementById('cartModal').style.display='flex';renderCart();}
-function closeCart(){document.getElementById('cartModal').style.display='none';}
-function renderCart(){const list=document.getElementById('cartList');list.innerHTML="";cart.forEach((c,i)=>{list.innerHTML+=`<div class="cart-row"><span>${c.name}</span><span>$${c.price}</span></div>`})}
-
-// Lightbox
-function openLightbox(url){document.getElementById('lightbox').style.display='flex';document.getElementById('lightboxImg').src=url}
+let products=[{id:1,name:"Jesus is King Tee",desc:"Local quality · Soft cotton",price:"$18",category:"tees",front:"https://images.unsplash.com/photo-1593032465175-0d7c2d64be7f?q=80&w=600",back:"https://images.unsplash.com/photo-1593032465175-0d7c2d64be7f?q=80&w=600"}]
+function renderGrid(list,targetId){const grid=document.getElementById(targetId);grid.innerHTML='';list.forEach(p=>{const card=document.createElement('div');card.className='card';card.innerHTML=`<div class="card-media" onclick="this.classList.toggle('flip')"><img class="front" src="${p.front}"><img class="back" src="${p.back}"></div><div class="card-body"><div class="title-row"><h3>${p.name}</h3><div class="price">${p.price}</div></div><div class="desc">${p.desc}</div><div class="card-actions"><button class="btn" onclick="addToCart(${p.id})">Add to Cart</button></div></div>`;grid.appendChild(card)})}
+renderGrid(products,'grid');
+function addToCart(id){alert('Added to cart')}
+function closeCart(){document.getElementById('cartModal').style.display='none'}
 function closeLightbox(){document.getElementById('lightbox').style.display='none'}
-
-// Admin
-const adminTrigger=document.getElementById('adminTrigger');
-const adminPanel=document.getElementById('adminPanel');
-adminTrigger.addEventListener('click',()=>{
-  const pass=prompt("Enter admin password");
-  if(pass===ADMIN_PASSWORD){adminPanel.style.display='block';document.getElementById('adminStatus').innerText="unlocked";renderAdminList()}
-  else alert("Wrong password");
-});
-
-function saveProduct(){
-  const name=document.getElementById('prodName').value;
-  const desc=document.getElementById('prodDesc').value;
-  const price=parseFloat(document.getElementById('prodPrice').value)||0;
-  const category=document.getElementById('prodCategory').value;
-  const front=document.getElementById('prodFrontUrl').value;
-  const back=document.getElementById('prodBackUrl').value;
-  if(!name||!desc||!front){alert("Please fill name, desc, front image");return;}
-  products.push({name,desc,price,category,front,back});
-  localStorage.setItem('c4c_products_v2',JSON.stringify(products));
-  renderGrid();renderAdminList();clearEditor();
-}
-
-function clearEditor(){document.getElementById('prodName').value="";document.getElementById('prodDesc').value="";document.getElementById('prodPrice').value="";document.getElementById('prodFrontUrl').value="";document.getElementById('prodBackUrl').value="";}
-
-function renderAdminList(){const list=document.getElementById('adminList');list.innerHTML="";products.forEach((p,i)=>{const div=document.createElement('div');div.className='admin-item';div.innerHTML=`<span>${p.name} <small>(${p.category})</small></span><button class="tool-btn" onclick="removeProduct(${i})">Delete</button>`;list.appendChild(div);})
-}
-function removeProduct(i){if(confirm("Delete this product?")){products.splice(i,1);localStorage.setItem('c4c_products_v2',JSON.stringify(products));renderGrid();renderAdminList();}}
-
-// Categories filter
-document.querySelectorAll('#categoryButtons button').forEach(btn=>{
-  btn.addEventListener('click',e=>{
-    document.querySelectorAll('#categoryButtons button').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    const cat=btn.dataset.cat;
-    const grid=document.getElementById('grid');
-    grid.innerHTML="";
-    products.forEach((p,i)=>{
-      if(cat==='all'||p.category===cat){
-        const div=document.createElement('div');div.className='card';
-        div.innerHTML=`<div class="card-media"><img src="${p.front}" onclick="openLightbox('${p.front}')"></div>
-        <div class="card-body">
-          <div class="title-row"><h3>${p.name}</h3><span class="price">$${p.price}</span></div>
-          <div class="desc">${p.desc}</div>
-          <div class="card-actions">
-            <button class="small-btn" onclick="addToCart(${i})">Add to Cart</button>
-            <button class="small-btn" onclick="openLightbox('${p.back}')">Back</button>
-          </div>
-        </div>`;
-        grid.appendChild(div);
-      }
-    });
-  });
-});
+const adminTrigger=document.getElementById('adminTrigger');const adminPanel=document.getElementById('adminPanel');adminTrigger.addEventListener('click',()=>{adminPanel.style.display=adminPanel.style.display==='flex'?'none':'flex'})
 </script>
 </body>
 </html>
