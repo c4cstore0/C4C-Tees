@@ -5,78 +5,84 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>C4C Tees — Modern Shop</title>
 <style>
-  :root{
-    --gold:#ffd700;
-    --black:#000;
-    --white:#ffffff;
-    --muted:#6b6b6b;
-    --card-shadow: 0 6px 24px rgba(11,11,11,0.08);
-    --radius:12px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--white);color:#111}
-  a{color:inherit;text-decoration:none}
-  
-  /* Header */
-  .topbar{background:var(--black);color:var(--gold);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo-placeholder{width:54px;height:54px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6c200);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111}
-  .brand-title{font-family:"Old London",serif;font-size:28px;letter-spacing:0.6px}
-  .brand-sub{color:#ddd;font-size:14px}
-  
-  /* Hero / cover section */
-  .cover-photo{width:100%;height:300px;background:#eee;border-radius:12px;overflow:hidden;margin:14px 0}
-  .cover-photo img{width:100%;height:100%;object-fit:cover}
-  .hero-tagline{font-size:16px;color:#444;margin-bottom:10px;text-align:center}
+:root{
+  --gold:#ffd700;
+  --black:#000;
+  --white:#fff;
+  --muted:#6b6b6b;
+  --card-shadow:0 6px 24px rgba(11,11,11,0.08);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--white);color:#111}
+a{color:inherit;text-decoration:none}
+/* Header */
+.topbar{background:var(--black);color:var(--gold);padding:18px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px}
+.logo-placeholder{width:54px;height:54px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6c200);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111}
+.brand-title{font-family:"Old London",serif;font-size:28px;letter-spacing:0.6px}
+.brand-sub{color:#ddd;font-size:14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.nav button{background:transparent;border:1px solid rgba(255,215,0,0.12);color:var(--gold);padding:8px 12px;border-radius:999px;cursor:pointer}
+.nav button.active,.nav button:hover{background:var(--gold);color:var(--black);border-color:transparent}
 
-  /* Category Buttons */
-  .nav{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
-  .nav button{background:transparent;border:1px solid rgba(255,215,0,0.12);color:var(--gold);padding:8px 12px;border-radius:999px;cursor:pointer}
-  .nav button.active, .nav button:hover{background:var(--gold);color:var(--black);border-color:transparent}
+/* Hero */
+.hero{padding:20px 20px;background:linear-gradient(180deg,var(--white),#faf8f2);border-bottom:1px solid rgba(0,0,0,0.04)}
+.cover-photo{width:100%;height:280px;background:#eee;border-radius:14px;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+.cover-photo img{width:100%;height:100%;object-fit:cover}
+.cover-desc{position:absolute;top:10px;left:20px;color:#fff;font-weight:700;background:rgba(0,0,0,0.4);padding:8px 12px;border-radius:8px;max-width:80%}
+.hero-title{margin-top:14px;font-family:"Old London",serif;font-size:32px}
+.hero-tagline{font-size:16px;color:var(--muted);margin-top:4px}
 
-  /* Grid */
-  .container{max-width:1200px;margin:0 auto;padding:18px}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
-  @media(max-width:600px){.grid{grid-template-columns:1fr}}
-  .card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
-  .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(11,11,11,0.12)}
-  .card-media{position:relative;height:0;padding-bottom:120%;overflow:hidden;cursor:pointer}
-  .card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .18s}
-  .card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column}
-  .title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .card h3{margin:6px 0;font-size:18px}
-  .desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1}
-  .price{color:var(--gold);font-weight:700;margin-top:10px}
-  .card-actions{display:flex;gap:10px;margin-top:12px}
-  .small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
-  
-  /* Cart drawer */
-  .cart-drawer{position:fixed;right:0;top:0;bottom:0;width:320px;background:#fff;box-shadow:-4px 0 30px rgba(0,0,0,0.2);transform:translateX(100%);transition:transform 0.3s ease;z-index:2000;padding:18px;display:flex;flex-direction:column}
-  .cart-drawer.open{transform:translateX(0)}
-  .cart-drawer h3{margin-top:0}
-  .cart-list{flex:1;overflow-y:auto;margin-bottom:12px}
-  .cart-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
-  .checkout-btn{background:var(--gold);color:var(--black);padding:10px;border:none;border-radius:12px;font-weight:700;cursor:pointer;width:100%}
-  
-  /* Footer */
-  footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:center;margin-top:18px}
+/* Grid */
+.container{max-width:1200px;margin:20px auto;padding:10px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.filter{padding:8px 12px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer}
+.filter.active{background:var(--gold);color:var(--black);border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s;cursor:pointer;position:relative}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(11,11,11,0.12)}
+.card-media{position:relative;height:0;padding-bottom:120%;overflow:hidden;border-radius:12px}
+.card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .25s}
+.card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column}
+.title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.card h3{margin:6px 0;font-size:18px}
+.desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1}
+.price{color:var(--gold);font-weight:700;margin-top:10px}
+.card-actions{display:flex;gap:10px;margin-top:12px}
+.small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
+.btn{background:var(--gold);color:var(--black);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
+.btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--black)}
 
-  /* Admin */
-  .admin-trigger{position:fixed;left:12px;bottom:12px;background:#111;border:1px solid #222;color:#111;padding:6px 8px;border-radius:999px;font-size:13px;cursor:pointer;z-index:2500}
-  .admin-panel{display:none;position:fixed;left:0;bottom:0;width:100%;max-height:85vh;z-index:2500;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto}
-  .admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px}
-  .admin-form{flex:1;min-width:280px}
-  .admin-preview{flex:1;min-width:320px;border-left:1px solid #eee;padding-left:12px}
-  .label{font-size:13px;color:#444;margin-top:8px}
-  .input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:6px}
-  .row{display:flex;gap:8px}
-  .muted{color:var(--muted);font-size:13px}
-  .tiny{font-size:12px;color:#777}
-  .admin-list{margin-top:12px}
-  .admin-item{padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:8px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .admin-item small{color:#888}
-  .tool-btn{padding:8px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:none;cursor:pointer}
+/* Cart drawer */
+.cart-drawer{position:fixed;right:-320px;top:0;width:320px;height:100%;background:#fff;box-shadow:-6px 0 28px rgba(0,0,0,0.16);z-index:2000;transition:right .28s;display:flex;flex-direction:column}
+.cart-drawer.open{right:0}
+.cart-header{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid #eee;font-weight:700}
+.cart-list{flex:1;overflow:auto;padding:10px}
+.cart-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
+.cart-footer{padding:10px;border-top:1px solid #eee}
+.cart-footer a{display:block;text-align:center;background:var(--gold);color:#000;padding:10px;border-radius:12px;font-weight:700;text-decoration:none}
+
+/* Admin */
+.admin-trigger{position:fixed;left:12px;bottom:12px;background:#111;border:none;padding:6px 8px;border-radius:999px;font-size:13px;color:#111;opacity:0.2;cursor:pointer;z-index:2500}
+.admin-panel{display:none;position:fixed;bottom:0;width:100%;max-height:85vh;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto;z-index:2500}
+.admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px;flex-wrap:wrap}
+.admin-form{flex:1;min-width:280px}
+.admin-preview{flex:1;min-width:320px;border-left:1px solid #eee;padding-left:12px}
+.label{font-size:13px;color:#444;margin-top:8px}
+.input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:6px}
+.row{display:flex;gap:8px}
+.muted{color:var(--muted);font-size:13px}
+.tiny{font-size:12px;color:#777}
+.admin-list{margin-top:12px}
+.admin-item{padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:8px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.admin-item small{color:#888}
+.tool-btn{padding:8px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:none;cursor:pointer}
+
+/* Footer */
+footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:center;margin-top:18px}
 </style>
 </head>
 <body>
@@ -93,187 +99,232 @@
 </div>
 
 <!-- Hero / Cover -->
-<div class="cover-photo">
-  <img src="https://images.unsplash.com/photo-1593032457865-d6b7a640c087?auto=format&fit=crop&w=1200&q=80" alt="Lifestyle cover">
-</div>
-<div class="hero-tagline">Faith. Vibe. Everyday.</div>
+<section class="hero">
+  <div class="cover-photo" id="coverPhoto">
+    <img src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=1200" alt="Lifestyle">
+    <div class="cover-desc" id="coverDesc">Premium Cotton Tees — Bold Designs for Your Faith & Vibe.</div>
+  </div>
+  <div class="hero-title">C4C Tees</div>
+  <div class="hero-tagline">Faith. Vibe. Everyday.</div>
+</section>
 
-<!-- Categories -->
-<div class="nav" id="categoryButtons" role="tablist" aria-label="categories">
-  <button class="nav-btn active" data-cat="all">All</button>
-  <button class="nav-btn" data-cat="tees">Tees</button>
-  <button class="nav-btn" data-cat="hoodies">Hoodies</button>
-  <button class="nav-btn" data-cat="kids">Kids</button>
-  <button class="nav-btn" data-cat="custom">Custom</button>
-</div>
-
-<!-- Catalog -->
-<div class="container" id="gridScrollTarget">
+<!-- Filters -->
+<div class="container">
+  <div class="filters" id="filters"></div>
   <div class="grid" id="grid"></div>
 </div>
 
-<!-- Cart drawer -->
+<!-- Cart Drawer -->
 <div class="cart-drawer" id="cartDrawer">
-  <h3>Your Cart</h3>
+  <div class="cart-header">
+    <span>Your Cart</span>
+    <button onclick="closeCart()" class="tool-btn">Close</button>
+  </div>
   <div class="cart-list" id="cartList"></div>
-  <div>
-    <strong>Send your order & pay via:</strong>
-    <p>MTN MoMo: <a href="tel:*185*0880466699#">0880466699</a></p>
-    <p>Orange Money / WhatsApp: <a href="https://wa.me/2310776839092" target="_blank">0776839092</a></p>
-    <button class="checkout-btn" onclick="checkoutWhatsApp()">Send Order on WhatsApp</button>
+  <div class="cart-footer">
+    <a href="#" id="checkoutBtn" target="_blank">Checkout via WhatsApp</a>
   </div>
 </div>
 
 <!-- Footer -->
 <footer>
+  Contact: <a href="tel:+231880466699" style="color:#ffd700;">0880466699 (MTN MoMo)</a> | 
+  <a href="tel:+231776839092" style="color:#ffd700;">0776839092 (Orange Money)</a><br>
   © 2025 C4C Tees
 </footer>
 
 <!-- Admin Trigger -->
 <button class="admin-trigger" id="adminTrigger">Admin</button>
 
-<!-- Admin panel -->
+<!-- Admin Panel -->
 <div class="admin-panel" id="adminPanel">
   <div class="admin-inner">
     <div class="admin-form">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3>Admin — Catalog Manager</h3>
-        <div class="tiny muted">Status: <span id="adminStatus">locked</span></div>
+      <h3>Admin Panel</h3>
+      <div class="label">Brand Description (above cover)</div>
+      <textarea id="adminCoverDesc" rows="3"></textarea>
+
+      <div class="label">Cover Image URL</div>
+      <input type="text" id="adminCoverImg">
+
+      <div class="label">Categories</div>
+      <div id="adminCategories" class="admin-list"></div>
+      <div class="row">
+        <input type="text" id="newCategory" placeholder="New category">
+        <button class="tool-btn" onclick="addCategory()">Add</button>
       </div>
 
-      <div class="label">Product Editor</div>
-      <input class="input" id="prodName" placeholder="Product name">
-      <textarea id="prodDesc" class="input" rows="3" placeholder="Short description"></textarea>
-      <input class="input" id="prodPrice" placeholder="Price">
-      <select id="prodCategory" class="input"></select>
+      <div class="label">Products</div>
+      <div id="adminProducts" class="admin-list"></div>
+      <button class="tool-btn" onclick="addProduct()">Add New Product</button>
 
-      <div class="label">Images (Front / Back)</div>
-      <input class="input" id="prodFrontUrl" placeholder="Front image URL or /images/filename.jpg">
-      <input class="input" id="prodBackUrl" placeholder="Back image URL or /images/filename.jpg">
-
-      <div style="display:flex;gap:10px;margin-top:12px">
-        <button class="tool-btn" onclick="saveProduct()">Save Product</button>
-        <button class="tool-btn" onclick="deleteProduct()">Delete Selected</button>
-        <button class="tool-btn" onclick="backToSite()">Back to Site</button>
+      <div style="margin-top:14px;">
+        <button class="btn" onclick="saveChanges()">Save Changes</button>
+        <button class="btn secondary" onclick="closeAdmin()">Back</button>
       </div>
-
-      <div class="label" style="margin-top:20px">Category Manager</div>
-      <input class="input" id="newCategory" placeholder="New category name">
-      <button class="tool-btn" onclick="addCategory()">Add Category</button>
-
-      <div class="admin-list" id="categoryList"></div>
-
-    </div>
-
-    <div class="admin-preview">
-      <h4>Live Preview</h4>
-      <div id="previewGrid"></div>
     </div>
   </div>
 </div>
 
 <script>
-let products=[
-  {id:1,name:"Bold Faith Tee",desc:"Premium Cotton Tees — Bold Designs for Your Faith & Vibe.",price:"L$2500",category:"tees",front:"https://images.unsplash.com/photo-1581349481952-b8fcd16205e0?auto=format&fit=crop&w=500&q=80",back:"https://images.unsplash.com/photo-1600185360244-18b2e879e2ea?auto=format&fit=crop&w=500&q=80"},
-  {id:2,name:"Kids Joy Tee",desc:"Soft Cotton Kids Tee",price:"L$2000",category:"kids",front:"https://images.unsplash.com/photo-1605008783923-f4f8f7c2a8b1?auto=format&fit=crop&w=500&q=80",back:"https://images.unsplash.com/photo-1605008783923-f4f8f7c2a8b1?auto=format&fit=crop&w=500&q=80"},
-  {id:3,name:"Cozy Hoodie",desc:"Warm & stylish hoodie",price:"L$4500",category:"hoodies",front:"https://images.unsplash.com/photo-1602810311857-5e7d3f3b41c3?auto=format&fit=crop&w=500&q=80",back:"https://images.unsplash.com/photo-1602810311857-5e7d3f3b41c3?auto=format&fit=crop&w=500&q=80"}
-];
-let cart=[];
+// --- ADMIN PANEL LOGIC ---
+let adminPassword = "78847@june";
+let isAdmin = false;
 
-const grid=document.getElementById("grid");
-const categoryButtons=document.querySelectorAll(".nav button");
-const cartDrawer=document.getElementById("cartDrawer");
-const cartList=document.getElementById("cartList");
-
-function renderGrid(cat="all"){
-  grid.innerHTML="";
-  products.filter(p=>cat==="all"||p.category===cat).forEach(p=>{
-    let card=document.createElement("div");card.className="card";
-    let media=document.createElement("div");media.className="card-media";
-    let frontImg=document.createElement("img");frontImg.src=p.front;
-    let backImg=document.createElement("img");backImg.src=p.back;backImg.style.opacity="0";
-    media.appendChild(frontImg);media.appendChild(backImg);
-    media.onmouseenter=()=>{frontImg.style.opacity="0";backImg.style.opacity="1"}
-    media.onmouseleave=()=>{frontImg.style.opacity="1";backImg.style.opacity="0"}
-    media.onclick=()=>{toggleCart(p)}
-    let body=document.createElement("div");body.className="card-body";
-    let h3=document.createElement("h3");h3.textContent=p.name;
-    let desc=document.createElement("div");desc.className="desc";desc.textContent=p.desc;
-    let price=document.createElement("div");price.className="price";price.textContent=p.price;
-    body.appendChild(h3);body.appendChild(desc);body.appendChild(price);
-    card.appendChild(media);card.appendChild(body);grid.appendChild(card);
-  });
-}
-
-categoryButtons.forEach(btn=>{
-  btn.onclick=()=>{
-    categoryButtons.forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    renderGrid(btn.dataset.cat)
+document.getElementById('adminTrigger').addEventListener('click', ()=>{
+  if(!isAdmin){
+    let pass = prompt("Enter admin password:");
+    if(pass!==adminPassword){alert("Wrong password"); return;}
+    isAdmin=true;
   }
+  document.getElementById('adminPanel').style.display='block';
 });
 
-renderGrid();
+// Close admin
+function closeAdmin(){document.getElementById('adminPanel').style.display='none'}
 
-// Admin panel
-const adminTrigger=document.getElementById("adminTrigger");
-const adminPanel=document.getElementById("adminPanel");
-let selectedProductId=null;
+// --- CATEGORIES ---
+let categories = ["Tees","Hoodies","Kids","All"];
+let products = [
+  {name:"Jesus Tee",desc:"Bold Faith Tee",price:"$25",category:"Tees",imgFront:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400",imgBack:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400"},
+  {name:"Holy Hoodie",desc:"Warm & Cozy",price:"$40",category:"Hoodies",imgFront:"https://images.unsplash.com/photo-1618354694841-4f0d2f13dbdf?w=400",imgBack:"https://images.unsplash.com/photo-1618354694841-4f0d2f13dbdf?w=400"},
+  {name:"Kids Tee",desc:"Fun & Soft",price:"$20",category:"Kids",imgFront:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400",imgBack:"https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?w=400"}
+];
 
-adminTrigger.onclick=()=>{adminPanel.style.display=adminPanel.style.display==="block"?"none":"block"};
-
-function saveProduct(){
-  if(!selectedProductId){alert("Select product first");return}
-  let prod=products.find(p=>p.id===selectedProductId);
-  prod.name=document.getElementById("prodName").value;
-  prod.desc=document.getElementById("prodDesc").value;
-  prod.price=document.getElementById("prodPrice").value;
-  prod.category=document.getElementById("prodCategory").value;
-  prod.front=document.getElementById("prodFrontUrl").value;
-  prod.back=document.getElementById("prodBackUrl").value;
-  renderGrid();
-  alert("Saved!")
+// --- RENDER CATEGORIES ---
+function renderCategories(){
+  const filterEl = document.getElementById('filters');
+  filterEl.innerHTML='';
+  categories.forEach((cat,i)=>{
+    let btn=document.createElement('button');
+    btn.textContent=cat;
+    btn.className=i===0?"active":"";
+    btn.onclick=()=>{filterProducts(cat);}
+    filterEl.appendChild(btn);
+  });
 }
+renderCategories();
 
-function toggleCart(product){
-  cart.push(product);
-  renderCart();
-  cartDrawer.classList.add("open");
+// --- FILTER PRODUCTS ---
+function filterProducts(cat){
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  let filtered=cat==="All"?products:products.filter(p=>p.category===cat);
+  filtered.forEach((p,i)=>{
+    let card=document.createElement('div');card.className='card';
+    card.innerHTML=`
+      <div class="card-media">
+        <img src="${p.imgFront}" class="front">
+        <img src="${p.imgBack}" class="back" style="transform:rotateY(180deg);position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden">
+      </div>
+      <div class="card-body">
+        <h3>${p.name}</h3>
+        <div class="desc">${p.desc}</div>
+        <div class="price">${p.price}</div>
+        <div class="card-actions">
+          <button class="small-btn" onclick="addToCart(${i})">Add to Cart</button>
+        </div>
+      </div>
+    `;
+    // hover flip
+    let media=card.querySelector('.card-media');
+    let front=media.querySelector('.front');
+    let back=media.querySelector('.back');
+    card.onmouseenter=()=>{front.style.transform='rotateY(180deg)';back.style.transform='rotateY(0deg)';}
+    card.onmouseleave=()=>{front.style.transform='rotateY(0deg)';back.style.transform='rotateY(180deg)';}
+    grid.appendChild(card);
+  });
 }
+filterProducts("All");
 
-function renderCart(){
-  cartList.innerHTML="";
-  cart.forEach(c=>{
-    let row=document.createElement("div");row.className="cart-row";
-    row.innerHTML=`<span>${c.name}</span><span>${c.price}</span>`;
-    cartList.appendChild(row)
-  })
+// --- ADMIN CATEGORY RENDER ---
+function renderAdminCategories(){
+  const el=document.getElementById('adminCategories');el.innerHTML='';
+  categories.forEach((c,i)=>{
+    let div=document.createElement('div');div.className='admin-item';
+    div.innerHTML=`<span>${c}</span><div><button class="tool-btn" onclick="deleteCategory(${i})">Del</button></div>`;
+    el.appendChild(div);
+  });
 }
-
-function checkoutWhatsApp(){
-  if(cart.length===0){alert("Cart empty");return}
-  let text="Hello, I want to order:\n";
-  cart.forEach(c=>text+=`- ${c.name} ${c.price}\n`);
-  window.open(`https://wa.me/2310880466699?text=${encodeURIComponent(text)}`,"_blank")
-}
-
-function backToSite(){adminPanel.style.display="none"}
+renderAdminCategories();
 
 function addCategory(){
-  let name=document.getElementById("newCategory").value.trim();
-  if(!name){alert("Enter name");return}
-  let btn=document.createElement("button");btn.className="nav-btn";btn.dataset.cat=name.toLowerCase();btn.textContent=name;
-  document.getElementById("categoryButtons").appendChild(btn);
-  document.getElementById("newCategory").value="";
+  let val=document.getElementById('newCategory').value;
+  if(val){categories.push(val);renderCategories();renderAdminCategories();document.getElementById('newCategory').value='';}
+}
+function deleteCategory(i){categories.splice(i,1);renderCategories();renderAdminCategories();}
+
+// --- ADMIN PRODUCTS ---
+function renderAdminProducts(){
+  const el=document.getElementById('adminProducts');el.innerHTML='';
+  products.forEach((p,i)=>{
+    let div=document.createElement('div');div.className='admin-item';
+    div.innerHTML=`<span>${p.name} (${p.category})</span>
+    <div>
+      <button class="tool-btn" onclick="deleteProduct(${i})">Del</button>
+    </div>`;
+    el.appendChild(div);
+  });
+}
+renderAdminProducts();
+
+function addProduct(){
+  products.push({name:"New Product",desc:"Description",price:"$0",category:categories[0],imgFront:"https://via.placeholder.com/400",imgBack:"https://via.placeholder.com/400"});
+  renderAdminProducts();filterProducts("All");
+}
+function deleteProduct(i){products.splice(i,1);renderAdminProducts();filterProducts("All");}
+
+// --- COVER PHOTO & DESCRIPTION ---
+document.getElementById('adminCoverDesc').value=document.getElementById('coverDesc').textContent;
+document.getElementById('adminCoverImg').value=document.querySelector('.cover-photo img').src;
+document.getElementById('adminCoverDesc').addEventListener('input',(e)=>{document.getElementById('coverDesc').textContent=e.target.value;})
+document.getElementById('adminCoverImg').addEventListener('input',(e)=>{document.querySelector('.cover-photo img').src=e.target.value;})
+
+// --- SAVE CHANGES (LOCALSTORAGE) ---
+function saveChanges(){
+  localStorage.setItem('c4c_coverDesc',document.getElementById('coverDesc').textContent);
+  localStorage.setItem('c4c_coverImg',document.querySelector('.cover-photo img').src);
+  localStorage.setItem('c4c_categories',JSON.stringify(categories));
+  localStorage.setItem('c4c_products',JSON.stringify(products));
+  alert('Changes saved!');
 }
 
-function deleteProduct(){
-  if(!selectedProductId){alert("Select product first");return}
-  products=products.filter(p=>p.id!==selectedProductId);
-  renderGrid();
-  alert("Deleted!")
+// --- CART LOGIC ---
+let cart=[];
+function addToCart(i){
+  cart.push(products[i]);
+  renderCart();
+  openCart();
 }
+function renderCart(){
+  const el=document.getElementById('cartList');
+  el.innerHTML='';
+  cart.forEach((p,i)=>{
+    let div=document.createElement('div');div.className='cart-row';
+    div.innerHTML=`${p.name} <strong>${p.price}</strong> <button onclick="removeFromCart(${i})" class="tool-btn">X</button>`;
+    el.appendChild(div);
+  });
+  updateCheckout();
+}
+function removeFromCart(i){cart.splice(i,1);renderCart();}
+function updateCheckout(){
+  let msg='Order Details:\n';
+  cart.forEach(p=>{msg+=`${p.name} - ${p.price}\n`;})
+  msg+=`\nPay via MTN MoMo 0880466699 or Orange Money 0776839092`;
+  document.getElementById('checkoutBtn').href='https://wa.me/231880466699?text='+encodeURIComponent(msg);
+}
+function openCart(){document.getElementById('cartDrawer').classList.add('open');}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');}
+
+// --- LOAD LOCALSTORAGE ---
+if(localStorage.getItem('c4c_coverDesc')) document.getElementById('coverDesc').textContent=localStorage.getItem('c4c_coverDesc');
+if(localStorage.getItem('c4c_coverImg')) document.querySelector('.cover-photo img').src=localStorage.getItem('c4c_coverImg');
+if(localStorage.getItem('c4c_categories')) categories=JSON.parse(localStorage.getItem('c4c_categories'));
+if(localStorage.getItem('c4c_products')) products=JSON.parse(localStorage.getItem('c4c_products'));
+renderCategories();
+renderAdminCategories();
+renderAdminProducts();
+filterProducts("All");
 </script>
-
 </body>
 </html>
