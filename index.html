@@ -136,6 +136,14 @@ a{text-decoration:none;color:inherit;}
 .cart-list{margin-top:12px;}
 .cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee;}
 
+.footer{
+  background:#111;
+  color:var(--gold);
+  padding:20px;
+  text-align:center;
+}
+.footer a{color:var(--gold);margin:0 6px;}
+
 .admin-trigger{
   position:fixed;
   right:12px;
@@ -199,7 +207,7 @@ a{text-decoration:none;color:inherit;}
       <div id="adminCategories"></div>
       <button class="tool-btn" onclick="addCategory()">Add Category</button>
 
-      <div class="label">Add Product</div>
+      <div class="label">Add / Edit Product</div>
       <input class="input" id="prodName" placeholder="Product Name">
       <textarea class="input" id="prodDesc" rows="3" placeholder="Description"></textarea>
       <input class="input" id="prodPrice" placeholder="Price">
@@ -208,9 +216,22 @@ a{text-decoration:none;color:inherit;}
       <input class="input" id="prodBackUrl" placeholder="Back Image URL">
       <button class="btn" onclick="saveProduct()">Save Product</button>
 
+      <div style="margin-top:12px;">
+        <button class="tool-btn" onclick="saveAllChanges()">Save All Changes</button>
+        <button class="tool-btn" onclick="closeAdmin()">Back to Site</button>
+      </div>
+
       <div class="admin-list" id="adminList"></div>
     </div>
   </div>
+</div>
+
+<div class="footer">
+  <div>Contact Us: 
+    <a href="tel:+231770000000">+231 77 000 0000</a> | 
+    <a href="https://wa.me/231770000000" target="_blank">WhatsApp</a>
+  </div>
+  <div>© 2025 C4C Tees</div>
 </div>
 
 <script>
@@ -221,13 +242,11 @@ let products = [
   {name:"Faith Hoodie",desc:"Stay warm in faith.",price:35,front:"https://via.placeholder.com/300x400?text=Front+3",back:"https://via.placeholder.com/300x400?text=Back+3",category:"Hoodies"},
   {name:"Kids Prayer Tee",desc:"Cute and spiritual.",price:18,front:"https://via.placeholder.com/300x400?text=Front+4",back:"https://via.placeholder.com/300x400?text=Back+4",category:"Kids"}
 ];
-
+let cart = [];
 let selectedCategory = "All";
 
-// Render filters
 function renderFilters(){
-  const f = document.getElementById("filters");
-  f.innerHTML="";
+  const f = document.getElementById("filters"); f.innerHTML="";
   categories.forEach(c=>{
     const btn = document.createElement("div");
     btn.className="filter"+(selectedCategory===c?" active":"");
@@ -237,12 +256,11 @@ function renderFilters(){
   });
 }
 
-// Render grid
 function renderGrid(){
   const g = document.getElementById("grid");
   g.innerHTML="";
   let filtered = selectedCategory==="All"?products:products.filter(p=>p.category===selectedCategory);
-  filtered.forEach(p=>{
+  filtered.forEach((p,i)=>{
     const card = document.createElement("div"); card.className="card";
     const media = document.createElement("div"); media.className="card-media";
     const inner = document.createElement("div"); inner.className="card-media-inner";
@@ -255,10 +273,17 @@ function renderGrid(){
     const h3 = document.createElement("h3"); h3.innerText=p.name;
     const d = document.createElement("div"); d.className="desc"; d.innerText=p.desc;
     const pr = document.createElement("div"); pr.className="price"; pr.innerText="$"+p.price;
-    body.appendChild(h3); body.appendChild(d); body.appendChild(pr);
+    const btnAdd = document.createElement("button"); btnAdd.className="btn"; btnAdd.innerText="Add to Cart";
+    btnAdd.onclick=()=>{cart.push(p);alert(p.name+" added to cart"); renderCart();}
+    body.appendChild(h3); body.appendChild(d); body.appendChild(pr); body.appendChild(btnAdd);
     card.appendChild(body);
     g.appendChild(card);
   });
+}
+
+function renderCart(){
+  console.log("Cart Items:",cart);
+  // You can expand this to a modal/cart drawer if needed
 }
 
 // Admin
@@ -282,7 +307,8 @@ function updateAdminCategories(){
   });
 }
 function renameCategory(oldName){
-  const n=prompt("Rename category:",oldName); if(n){products.forEach(p=>{if(p.category===oldName)p.category=n});categories[categories.indexOf(oldName)]=n;renderFilters();renderGrid();updateCategorySelect();updateAdminCategories();}
+  const n=prompt("Rename category:",oldName); 
+  if(n){products.forEach(p=>{if(p.category===oldName)p.category=n});categories[categories.indexOf(oldName)]=n;renderFilters();renderGrid();updateCategorySelect();updateAdminCategories();}
 }
 function saveProduct(){
   const name=document.getElementById("prodName").value;
@@ -300,10 +326,14 @@ function updateAdminList(){
   const div = document.getElementById("adminList"); div.innerHTML="";
   products.forEach((p,i)=>{const item=document.createElement("div"); item.className="admin-item"; item.innerHTML=`<span>${p.name} (${p.category})</span>`; div.appendChild(item);});
 }
+function saveAllChanges(){localStorage.setItem("products",JSON.stringify(products));localStorage.setItem("categories",JSON.stringify(categories));alert("All changes saved locally!");}
+function closeAdmin(){document.getElementById("adminPanel").style.display="none";}
 
-// Init
+// Load saved
+if(localStorage.getItem("products")){products=JSON.parse(localStorage.getItem("products"));}
+if(localStorage.getItem("categories")){categories=JSON.parse(localStorage.getItem("categories"));}
+
 renderFilters(); renderGrid(); updateCategorySelect(); updateAdminCategories(); updateAdminList();
 </script>
-
 </body>
 </html>
