@@ -1,615 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>C4C Tees — Modern Shop</title>
-<style>
-  :root{
-    --gold:#ffd700;
-    --black:#000;
-    --white:#ffffff;
-    --muted:#6b6b6b;
-    --card-shadow: 0 6px 24px rgba(11,11,11,0.08);
-    --radius:12px;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;background:var(--white);color:#111}
-  a{color:inherit}
-  /* Header */
-  .topbar{background:var(--black);color:var(--gold);padding:18px 20px;display:flex;align-items:center;justify-content:space-between}
-  .brand{display:flex;align-items:center;gap:12px}
-  .logo-placeholder{width:54px;height:54px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6c200);display:flex;align-items:center;justify-content:center;font-weight:700;color:#111}
-  .brand-title{font-family:"Old London",serif;font-size:28px;letter-spacing:0.6px}
-  .brand-sub{color:#ddd;font-size:14px}
-  .nav{display:flex;gap:12px;align-items:center}
-  .nav button{background:transparent;border:1px solid rgba(255,215,0,0.12);color:var(--gold);padding:8px 12px;border-radius:999px;cursor:pointer}
-  .nav button.active, .nav button:hover{background:var(--gold);color:var(--black);border-color:transparent}
-  /* Hero */
-  .hero{padding:28px 20px;background:linear-gradient(180deg,var(--white),#faf8f2);border-bottom:1px solid rgba(0,0,0,0.04)}
-  .hero-wrap{max-width:1200px;margin:0 auto;display:flex;gap:24px;align-items:center;justify-content:space-between}
-  .hero-content{max-width:60%}
-  .hero h1{margin:0;font-family:"Old London",serif;font-size:46px;color:var(--black)}
-  .hero p{color:var(--muted);margin-top:8px}
-  .hero-ctas{margin-top:14px;display:flex;gap:10px}
-  .btn{background:var(--gold);color:var(--black);border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.08);color:var(--black)}
-  /* Grid */
-  .container{max-width:1200px;margin:0 auto;padding:18px}
-  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-  .filter{padding:8px 12px;border-radius:999px;border:1px solid #eee;background:#fff;cursor:pointer}
-  .filter.active{background:var(--gold);color:var(--black);border-color:transparent}
-  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
-  @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero-content{max-width:100%}}
-  @media(max-width:600px){.grid{grid-template-columns:1fr}.hero h1{font-size:32px}}
-  .card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s}
-  .card:hover{transform:translateY(-6px);box-shadow:0 16px 40px rgba(11,11,11,0.12)}
-  .card-media{position:relative;height:0;padding-bottom:120%;overflow:hidden}
-  .card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;cursor:pointer;transition:opacity .18s}
-  .card-body{padding:12px 14px;flex:1;display:flex;flex-direction:column}
-  .title-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .card h3{margin:6px 0;font-size:18px}
-  .desc{color:var(--muted);font-size:14px;margin-top:6px;flex:1}
-  .price{color:var(--gold);font-weight:700;margin-top:10px}
-  .card-actions{display:flex;gap:10px;margin-top:12px}
-  .small-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 10px;border-radius:10px;cursor:pointer}
-  /* Lightbox */
-  .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;z-index:2000}
-  .lightbox img{max-width:94%;max-height:88%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
-  /* Cart modal */
-  .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1500;align-items:center;justify-content:center;padding:18px}
-  .modal-box{background:var(--white);width:100%;max-width:560px;border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.12);max-height:90vh;overflow:auto}
-  .modal-head{display:flex;align-items:center;justify-content:space-between}
-  .cart-list{margin-top:12px}
-  .cart-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed #eee}
-  /* Admin tiny trigger bottom */
-  .admin-trigger{position:fixed;left:12px;bottom:12px;background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 8px;border-radius:999px;font-size:13px;cursor:pointer;color:var(--muted)}
-  /* Admin panel */
-  .admin-panel{display:none;position:fixed;left:0;bottom:0;width:100%;max-height:85vh;z-index:2500;background:#fff;border-top:4px solid var(--gold);box-shadow:0 -20px 60px rgba(0,0,0,0.08);overflow:auto}
-  .admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px}
-  .admin-form{flex:1;min-width:280px}
-  .admin-preview{flex:1;min-width:320px;border-left:1px solid #eee;padding-left:12px}
-  .label{font-size:13px;color:#444;margin-top:8px}
-  .input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;margin-top:6px}
-  .row{display:flex;gap:8px}
-  .muted{color:var(--muted);font-size:13px}
-  .tiny{font-size:12px;color:#777}
-  .admin-list{margin-top:12px}
-  .admin-item{padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:8px;background:#fafafa;display:flex;align-items:center;justify-content:space-between;gap:8px}
-  .admin-item small{color:#888}
-  .tool-btn{padding:8px 10px;border-radius:8px;background:var(--black);color:var(--gold);border:none;cursor:pointer}
-  /* footer */
-  footer{padding:14px 20px;background:var(--black);color:var(--gold);text-align:center;margin-top:18px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C4C Tees</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fff;
+      color: #111;
+    }
+    header {
+      background: #111;
+      color: gold;
+      padding: 1rem;
+      text-align: center;
+    }
+    header h1 {
+      font-family: "Old London", serif;
+      margin: 0;
+      font-size: 2rem;
+    }
+    nav {
+      margin-top: .5rem;
+    }
+    nav button {
+      background: gold;
+      border: none;
+      margin: .3rem;
+      padding: .5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    nav button:hover {
+      background: black;
+      color: gold;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .product {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: .5rem;
+      text-align: center;
+      background: #fafafa;
+    }
+    .product img {
+      max-width: 100%;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .product h3 {
+      margin: .3rem 0;
+    }
+    .product p {
+      font-size: .9rem;
+      color: #333;
+      margin: .3rem 0;
+    }
+    .product button {
+      background: gold;
+      border: none;
+      padding: .4rem .8rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .product button:hover {
+      background: black;
+      color: gold;
+    }
+    footer {
+      background: #111;
+      color: gold;
+      padding: 1rem;
+      text-align: center;
+    }
+    .payment-box {
+      background: #fff;
+      border: 1px solid gold;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      text-align: left;
+      display: inline-block;
+    }
+    /* Cart Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,.7);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      max-width: 400px;
+      width: 90%;
+    }
+    .close {
+      float: right;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    /* Tiny Admin Button */
+    #adminBtn {
+      position: fixed;
+      bottom: 5px;
+      right: 5px;
+      background: #333;
+      color: #333; /* disguised */
+      font-size: .6rem;
+      border: none;
+      padding: .3rem .5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.2;
+    }
+    #adminPanel {
+      display: none;
+      position: fixed;
+      bottom: 50px;
+      right: 10px;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      width: 300px;
+      border-radius: 8px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    #adminPanel input, #adminPanel textarea {
+      width: 100%;
+      margin: .3rem 0;
+      padding: .4rem;
+    }
+    #adminPanel button {
+      margin-top: .5rem;
+      padding: .4rem .8rem;
+      background: gold;
+      border: none;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>C4C Tees</h1>
+    <nav id="categories"></nav>
+    <button onclick="openCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+  </header>
 
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo-placeholder">C4C</div>
-      <div>
-        <div class="brand-title">C4C Tees</div>
-        <div class="brand-sub">Christian-themed apparel • Monrovia, Liberia</div>
-      </div>
-    </div>
+  <main>
+    <div class="products" id="productGrid"></div>
+  </main>
 
-    <div class="nav" id="categoryButtons" role="tablist" aria-label="categories">
-      <button class="nav-btn active" data-cat="all">All</button>
-      <button class="nav-btn" data-cat="tees">Tees</button>
-      <button class="nav-btn" data-cat="hoodies">Hoodies</button>
-      <button class="nav-btn" data-cat="kids">Kids</button>
-      <button class="nav-btn" data-cat="custom">Custom</button>
-    </div>
-  </div>
-
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-wrap">
-      <div class="hero-content">
-        <h1>Bold faithwear in gold & black</h1>
-        <p class="muted">Quality tees and hoodies designed with bold messages — pay via Lonestar or Orange Money in Liberia. Edit catalog from Admin panel (password protected).</p>
-        <div class="hero-ctas">
-          <button class="btn" onclick="document.getElementById('gridScrollTarget').scrollIntoView({behavior:'smooth'})">Shop Collections</button>
-          <button class="btn secondary" onclick="openCart()">View Cart</button>
-        </div>
-      </div>
-      <div style="max-width:360px">
-        <div style="background:#fff;padding:14px;border-radius:12px;border:1px solid #eee">
-          <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=800&auto=format&fit=crop" style="width:100%;border-radius:8px;display:block;margin-bottom:8px" alt="model">
-          <div style="font-weight:700;color:var(--gold)">Local quality · Soft cotton</div>
-          <div class="muted tiny">Free pickup • Delivery available</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Catalog -->
-  <div class="container" id="gridScrollTarget">
-    <div class="filters" id="filters"></div>
-    <div class="grid" id="grid"></div>
-  </div>
-
-  <!-- Lightbox -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt="preview"></div>
-
-  <!-- Cart modal -->
-  <div class="modal" id="cartModal" aria-hidden="true">
-    <div class="modal-box" role="dialog" aria-modal="true">
-      <div class="modal-head">
-        <h3>Your Cart</h3>
-        <button class="tool-btn" onclick="closeCart()">Close</button>
-      </div>
-      <div class="cart-list" id="cartList"></div>
-      <div style="margin-top:10px">
-        <div><strong>Payment</strong></div>
-        <div class="muted tiny">Send payment using mobile money and then WhatsApp proof.</div>
-        <p style="margin:8px 0"><strong>Lonestar Mobile Money:</strong> <a href="tel:*185*0880466699#">0880466699</a></p>
-        <p style="margin:8px 0"><strong>Orange Money:</strong> <a href="tel:*185*0776839092#">0776839092</a></p>
-        <p style="margin:8px 0">WhatsApp: <a href="https://wa.me/2310776839092" target="_blank">0776839092</a></p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer + tiny admin trigger -->
   <footer>
-    © 2025 C4C Tees · Built with care • Edit catalog from Admin
+    <p>© 2025 C4C Tees. All rights reserved.</p>
+    <div class="payment-box">
+      <p><b>Lonestar MoMo:</b> 0880466699</p>
+      <p><b>Orange Money:</b> 0776839092</p>
+      <p><b>WhatsApp:</b> 0776839092</p>
+      <p><b>Phone:</b> 0880466699 / 0776839092</p>
+    </div>
   </footer>
-  <button class="admin-trigger" id="adminTrigger">Admin</button>
 
-  <!-- Admin panel (hidden) -->
-  <div class="admin-panel" id="adminPanel" aria-hidden="true">
-    <div class="admin-inner">
-      <div class="admin-form">
-        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
-          <h3>Admin — Catalog Manager</h3>
-          <div class="tiny muted">Status: <span id="adminStatus">locked</span></div>
-        </div>
-
-        <div class="label">Quick image picker (repo manifest)</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input class="input" id="manifestUrl" placeholder="/images/manifest.json (optional)" value="/images/manifest.json">
-          <button class="tool-btn" onclick="loadManifest()">Load</button>
-        </div>
-        <div class="muted tiny">If you upload images to /images/ and add manifest.json listing filenames, this will show those images for quick selection.</div>
-
-        <hr>
-
-        <div class="label">Product Editor</div>
-        <input class="input" id="prodName" placeholder="Product name (e.g., Jesus Is King Tee)">
-        <textarea id="prodDesc" class="input" rows="3" placeholder="Short description (shown under title)"></textarea>
-        <input class="input" id="prodPrice" placeholder="Price (numeric)">
-        <select id="prodCategory" class="input">
-          <option value="tees">Tees</option>
-          <option value="hoodies">Hoodies</option>
-          <option value="kids">Kids</option>
-          <option value="custom">Custom</option>
-        </select>
-
-        <div class="label">Image selection</div>
-        <div style="display:flex;gap:8px">
-          <input class="input" id="prodFrontUrl" placeholder="Front image URL or /images/filename.jpg">
-          <input class="input" id="prodBackUrl" placeholder="Back image URL or /images/filename.jpg">
-        </div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <input type="file" id="prodFrontFile" accept="image/*">
-          <input type="file" id="prodBackFile" accept="image/*">
-        </div>
-        <div class="muted tiny">Tip: use manifest picker for repo images. File inputs store Base64 in localStorage (good for few items).</div>
-
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button class="btn" onclick="saveProduct()">Save Product</button>
-          <button class="small-btn" onclick="clearEditor()">Clear</button>
-          <button class="small-btn" onclick="downloadSiteHTML()">Download updated index.html</button>
-        </div>
-
-        <div style="margin-top:14px">
-          <div class="label">Repo Images (manifest)</div>
-          <div id="manifestGrid" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px"></div>
-        </div>
-
-      </div>
-
-      <div class="admin-preview">
-        <h4>Products</h4>
-        <div id="adminList" class="admin-list"></div>
-      </div>
+  <!-- Cart Modal -->
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeCart()">&times;</span>
+      <h3>Your Cart</h3>
+      <div id="cartItems"></div>
+      <p><b>Total:</b> $<span id="cartTotal">0</span></p>
+      <button onclick="checkout()">Checkout</button>
     </div>
   </div>
 
-<script>
-/* -------------------------
-   Core data & utilities
-   -------------------------*/
-const ADMIN_PASSWORD = "78847@june"; // your password
-let products = JSON.parse(localStorage.getItem('c4c_products_v2') || 'null') || [
-  // starter demo items (you can edit/delete them)
-  {
-    name: "Jesus Is King Tee",
-    desc: "Rock this JIK tee proudly and boldly.",
-    price: 20,
-    front: "/images/jesus-front.jpg",
-    back: "/images/jesus-back.jpg",
-    category: "tees"
-  },
-  {
-    name: "Faith Over Fear Tee",
-    desc: "Inspire courage with this powerful tee.",
-    price: 18,
-    front: "/images/faith-front.jpg",
-    back: "/images/faith-back.jpg",
-    category: "tees"
-  }
-];
+  <!-- Admin -->
+  <button id="adminBtn" onclick="showAdmin()">.</button>
+  <div id="adminPanel">
+    <h4>Admin Panel</h4>
+    <input type="text" id="prodName" placeholder="Product Name">
+    <input type="text" id="prodCategory" placeholder="Category">
+    <textarea id="prodDesc" placeholder="Description"></textarea>
+    <input type="text" id="prodPrice" placeholder="Price">
+    <input type="text" id="prodFront" placeholder="Front Image Path (e.g. /images/front.png)">
+    <input type="text" id="prodBack" placeholder="Back Image Path (optional)">
+    <button onclick="saveProduct()">Save Product</button>
+    <div id="adminProducts"></div>
+  </div>
 
-let cart = [];
+  <script>
+    let products = JSON.parse(localStorage.getItem("products")) || [
+      {name:"Jesus Is King Tee",category:"Tees",desc:"Rock this JIK tee with pride!",price:20,front:"/images/jesus-front.png",back:"/images/jesus-back.png"},
+      {name:"Faith Over Fear Tee",category:"Tees",desc:"Wear your faith boldly.",price:18,front:"/images/faith-front.png"},
+    ];
+    let cart = [];
 
-/* -------------------------
-   Rendering functions
-   -------------------------*/
-function money(n){ return "$"+Number(n).toFixed(0); }
-
-function renderGrid(){
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  products.forEach((p, idx)=>{
-    const el = document.createElement('div');
-    el.className = 'card';
-    el.innerHTML = `
-      <div class="card-media">
-        <img src="${escapeHtml(p.front)}" data-front="${escapeHtml(p.front)}" data-back="${escapeHtml(p.back)}" onclick="flipImage(event)" loading="lazy" alt="${escapeHtml(p.name)}">
-      </div>
-      <div class="card-body">
-        <div class="title-row"><h3>${escapeHtml(p.name)}</h3><div class="price">${money(p.price)}</div></div>
-        <div class="desc">${escapeHtml(p.desc)}</div>
-        <div class="card-actions">
-          <button class="btn" onclick="addToCart(${idx})">Add to Cart</button>
-          <button class="small-btn" onclick="openPreview(${idx})">Preview</button>
-        </div>
-      </div>
-    `;
-    // set data-cat for filtering
-    el.setAttribute('data-category', p.category || 'tees');
-    grid.appendChild(el);
-  });
-  updateFilters();
-}
-
-function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
-
-/* -------------------------
-   Image preview & flip
-   -------------------------*/
-function flipImage(e){
-  const img = e.target;
-  const front = img.dataset.front;
-  const back = img.dataset.back || front;
-  img.src = (img.src === front) ? back : front;
-}
-
-function openPreview(index){
-  const p = products[index];
-  const lb = document.getElementById('lightbox');
-  document.getElementById('lightboxImg').src = p.front || '';
-  lb.style.display = 'flex';
-}
-function closeLightbox(){ document.getElementById('lightbox').style.display = 'none'; }
-
-/* -------------------------
-   Cart modal
-   -------------------------*/
-function addToCart(idx){
-  const p = products[idx];
-  cart.push(p);
-  renderCart();
-  openCart();
-}
-function renderCart(){
-  const list = document.getElementById('cartList');
-  list.innerHTML = '';
-  let total = 0;
-  cart.forEach((it,i)=>{
-    const row = document.createElement('div');
-    row.className = 'cart-row';
-    row.innerHTML = `<div>${escapeHtml(it.name)}</div><div>${money(it.price)}</div>`;
-    list.appendChild(row);
-    total += Number(it.price || 0);
-  });
-  if(cart.length===0){
-    list.innerHTML = '<div class="muted tiny">Your cart is empty.</div>';
-  } else {
-    const totalRow = document.createElement('div');
-    totalRow.style.marginTop='12px';
-    totalRow.innerHTML = `<strong>Total: ${money(total)}</strong>`;
-    list.appendChild(totalRow);
-  }
-}
-function openCart(){ document.getElementById('cartModal').style.display='flex'; renderCart(); }
-function closeCart(){ document.getElementById('cartModal').style.display='none'; }
-
-/* -------------------------
-   Filters
-   -------------------------*/
-function updateFilters(){
-  // ensure active class for Category nav
-  const catButtons = document.querySelectorAll('.nav-btn');
-  catButtons.forEach(btn=>{
-    btn.onclick = ()=>{ catButtons.forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterCategory(btn.dataset.cat); };
-  });
-}
-function filterCategory(cat){
-  const cards = document.querySelectorAll('#grid .card');
-  cards.forEach(c=>{
-    const ccat = c.getAttribute('data-category') || 'tees';
-    if(cat==='all' || cat===ccat) c.style.display='block'; else c.style.display='none';
-  });
-}
-
-/* -------------------------
-   Admin: password & UI
-   -------------------------*/
-const adminTrigger = document.getElementById('adminTrigger');
-const adminPanel = document.getElementById('adminPanel');
-const adminStatus = document.getElementById('adminStatus');
-let adminUnlocked = false;
-
-adminTrigger.addEventListener('click', async ()=>{
-  if(!adminUnlocked){
-    const pass = prompt('Enter admin password:');
-    if(pass === ADMIN_PASSWORD){
-      adminUnlocked = true;
-      adminStatus.textContent = 'unlocked';
-      showAdmin();
-    } else {
-      alert('Wrong password');
-      return;
-    }
-  } else {
-    showAdmin();
-  }
-});
-
-function showAdmin(){
-  adminPanel.style.display = (adminPanel.style.display==='block') ? 'none' : 'block';
-  if(adminPanel.style.display==='block'){
-    renderAdminList();
-    loadManifest(); // attempt to load manifest (if available)
-    // fill editor if empty
-    clearEditor();
-  }
-}
-
-/* -------------------------
-   Admin: manifest (repo) loader
-   -------------------------*/
-let manifestFiles = []; // array of filenames (strings)
-async function loadManifest(){
-  const urlInput = document.getElementById('manifestUrl');
-  const url = urlInput.value.trim();
-  const manifestGrid = document.getElementById('manifestGrid');
-  manifestGrid.innerHTML = '<div class="muted tiny">loading…</div>';
-  try{
-    const res = await fetch(url, {cache:'no-store'});
-    if(!res.ok) throw new Error('manifest not found');
-    manifestFiles = await res.json(); // expected array of filenames
-    manifestGrid.innerHTML = '';
-    manifestFiles.forEach(fname=>{
-      const thumb = document.createElement('div');
-      thumb.style.width='72px'; thumb.style.height='72px'; thumb.style.borderRadius='8px';
-      thumb.style.overflow='hidden'; thumb.style.border='1px solid #eee';
-      thumb.style.cursor='pointer';
-      thumb.title = fname;
-      const img = document.createElement('img');
-      img.src = '/images/'+fname;
-      img.style.width='100%'; img.style.height='100%'; img.style.objectFit='cover';
-      img.addEventListener('click', ()=> {
-        // set into front/back url inputs
-        document.getElementById('prodFrontUrl').value = '/images/'+fname;
-        // optionally set back to same name with '-back' fallback (not automatic)
-        document.getElementById('prodBackUrl').value = document.getElementById('prodBackUrl').value || '/images/'+fname;
+    function renderProducts(category="All"){
+      const grid=document.getElementById("productGrid");
+      grid.innerHTML="";
+      products.filter(p=>category==="All"||p.category===category).forEach((p,i)=>{
+        const div=document.createElement("div");
+        div.className="product";
+        div.innerHTML=`
+          <img src="${p.front}" onclick="this.src='${p.back||p.front}'">
+          <h3>${p.name}</h3>
+          <p>${p.desc||""}</p>
+          <p><b>$${p.price}</b></p>
+          <button onclick="addToCart(${i})">Add to Cart</button>`;
+        grid.appendChild(div);
       });
-      thumb.appendChild(img);
-      manifestGrid.appendChild(thumb);
-    });
-  }catch(err){
-    manifestGrid.innerHTML = `<div class="muted tiny">Manifest not found. Upload images to /images/ and add images/manifest.json</div>`;
-    console.warn(err);
-  }
-}
-
-/* -------------------------
-   Admin: add/edit/delete products
-   -------------------------*/
-function saveProduct(){
-  const idx = document.getElementById('editIndex')?.value;
-  const name = (document.getElementById('prodName').value || '').trim();
-  const desc = (document.getElementById('prodDesc').value || '').trim();
-  const price = Number(document.getElementById('prodPrice').value) || 0;
-  const category = document.getElementById('prodCategory').value || 'tees';
-
-  // priority: manifest URL input fields (if provided) > uploaded file (Base64)
-  const frontUrlField = document.getElementById('prodFrontUrl');
-  const backUrlField = document.getElementById('prodBackUrl');
-
-  const frontFile = document.getElementById('prodFrontFile').files[0];
-  const backFile = document.getElementById('prodBackFile').files[0];
-
-  // helper to continue saving after possible async file reads
-  const finishSave = (frontSrc, backSrc) => {
-    const product = { name, desc, price, front: frontSrc || '', back: backSrc || '', category };
-    if(idx === "" || idx === undefined){
-      products.push(product);
-    } else {
-      products[Number(idx)] = product;
     }
-    localStorage.setItem('c4c_products_v2', JSON.stringify(products));
-    renderProducts();
-    renderAdminList();
-    clearEditor();
-    alert('Product saved!');
-  };
 
-  // if front/back URL provided (repo manifest or URL), use those
-  if(frontUrlField.value.trim() || backUrlField.value.trim()){
-    const frontSrc = frontUrlField.value.trim() || (products[idx] && products[idx].front) || '';
-    const backSrc = backUrlField.value.trim() || (products[idx] && products[idx].back) || frontSrc;
-    // if files ALSO provided, read files and prefer file data for the one provided (user choice)
-    if(frontFile || backFile){
-      // asynchronous reads
-      const promises = [];
-      if(frontFile) promises.push(fileToBase64(frontFile).then(data=>({k:'front',v:data})));
-      if(backFile) promises.push(fileToBase64(backFile).then(data=>({k:'back',v:data})));
-      Promise.all(promises).then(results=>{
-        let f=frontSrc, b=backSrc;
-        results.forEach(r=>{ if(r.k==='front') f=r.v; if(r.k==='back') b=r.v; });
-        finishSave(f,b);
-      }).catch(e=>{
-        console.error(e);
-        finishSave(frontSrc, backSrc);
+    function renderCategories(){
+      const cats=["All",...new Set(products.map(p=>p.category))];
+      const nav=document.getElementById("categories");
+      nav.innerHTML="";
+      cats.forEach(c=>{
+        const btn=document.createElement("button");
+        btn.innerText=c;
+        btn.onclick=()=>renderProducts(c);
+        nav.appendChild(btn);
       });
-    } else {
-      finishSave(frontSrc, backSrc);
     }
-    return;
-  }
 
-  // else if files provided (no URL entered) read them and store Base64
-  if(frontFile || backFile){
-    const promises = [];
-    if(frontFile) promises.push(fileToBase64(frontFile).then(data=>({k:'front',v:data})));
-    if(backFile) promises.push(fileToBase64(backFile).then(data=>({k:'back',v:data})));
-    Promise.all(promises).then(results=>{
-      let f = (products[idx] && products[idx].front) || '';
-      let b = (products[idx] && products[idx].back) || f;
-      results.forEach(r=>{ if(r.k==='front') f=r.v; if(r.k==='back') b=r.v; });
-      finishSave(f,b);
-    }).catch(e=>{
-      console.error(e);
-      alert('Could not read files');
-    });
-    return;
-  }
-
-  // nothing provided: use existing images if editing, else blank
-  const frontSrc = (products[idx] && products[idx].front) || '';
-  const backSrc = (products[idx] && products[idx].back) || frontSrc;
-  finishSave(frontSrc, backSrc);
-}
-
-function fileToBase64(file){
-  return new Promise((res,rej)=>{
-    const reader = new FileReader();
-    reader.onload = ()=>res(reader.result);
-    reader.onerror = err=>rej(err);
-    reader.readAsDataURL(file);
-  });
-}
-
-function clearEditor(){
-  document.getElementById('editIndex').value = '';
-  document.getElementById('prodName').value = '';
-  document.getElementById('prodDesc').value = '';
-  document.getElementById('prodPrice').value = '';
-  document.getElementById('prodFrontUrl').value = '';
-  document.getElementById('prodBackUrl').value = '';
-  document.getElementById('prodFrontFile').value = '';
-  document.getElementById('prodBackFile').value = '';
-  document.getElementById('prodCategory').value = 'tees';
-}
-
-function renderAdminList(){
-  const list = document.getElementById('adminList');
-  list.innerHTML = '';
-  if(products.length===0){ list.innerHTML = '<div class="muted tiny">No products yet</div>'; return; }
-  products.forEach((p,i)=>{
-    const item = document.createElement('div');
-    item.className = 'admin-item';
-    const left = document.createElement('div');
-    left.innerHTML = `<strong>${escapeHtml(p.name)}</strong><br><small class="muted">${escapeHtml(p.category)} • ${money(p.price)}</small>`;
-    const right = document.createElement('div');
-    right.style.display='flex';
-    right.style.gap='8px';
-    const editBtn = document.createElement('button'); editBtn.className='tool-btn'; editBtn.textContent='Edit';
-    editBtn.onclick = ()=>{ populateEditor(i); };
-    const delBtn = document.createElement('button'); delBtn.className='tool-btn'; delBtn.textContent='Delete';
-    delBtn.onclick = ()=>{ if(confirm('Delete product?')){ products.splice(i,1); localStorage.setItem('c4c_products_v2', JSON.stringify(products)); renderProducts(); renderAdminList(); } };
-    right.appendChild(editBtn); right.appendChild(delBtn);
-    item.appendChild(left); item.appendChild(right);
-    list.appendChild(item);
-  });
-}
-
-function populateEditor(index){
-  const p = products[index];
-  document.getElementById('editIndex').value = index;
-  document.getElementById('prodName').value = p.name;
-  document.getElementById('prodDesc').value = p.desc;
-  document.getElementById('prodPrice').value = p.price;
-  document.getElementById('prodFrontUrl').value = p.front || '';
-  document.getElementById('prodBackUrl').value = p.back || '';
-  document.getElementById('prodCategory').value = p.category || 'tees';
-  window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
-}
-
-/* -------------------------
-   Download updated index.html
-   -------------------------*/
-function downloadSiteHTML(){
-  // embed products array into the HTML before downloading (so exported site has current products)
-  // We'll create a copy of the current document, replace placeholder marker with JSON.
-  const cloned = document.documentElement.cloneNode(true);
-  // find script tag marker (we didn't add a marker, so we'll append a small script at end with current products)
-  const script = document.createElement('script');
-  script.type = 'application/json';
-  script.id = 'c4c_products_data';
-  script.textContent = JSON.stringify(products);
-  cloned.querySelector('body').appendChild(script);
-  const html = '<!doctype html>\n' + cloned.outerHTML;
-  const blob = new Blob([html], {type:'text/html'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'index.html';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-/* -------------------------
-   Init
-   -------------------------*/
-function init(){
-  // render category buttons (already present)
-  renderGrid();
-  // wire up nav buttons initial behavior
-  const navBtns = document.querySelectorAll('.nav-btn');
-  navBtns.forEach(btn=>btn.onclick = ()=>{ navBtns.forEach(b=>b.classList.remove('active')); btn.classList.add('active'); filterCategory(btn.dataset.cat); });
-}
-init();
-
-/* -------------------------
-   Small helpers
-   -------------------------*/
-function filterCategory(cat){
-  filterCategory = window.filterCategory; // no-op to satisfy linter
-  const cards = document.querySelectorAll('#grid .card');
-  cards.forEach(c=>{
-    const cc = c.getAttribute('data-category') || 'tees';
-    c.style.display = (cat === 'all' || cat === cc) ? 'block' : 'none';
-  });
-}
-
-/* Ensure admin panel inputs exist (create hidden fields used earlier) */
-(function ensureEditorElements(){
-  const fields = ['editIndex','prodName','prodDesc','prodPrice','prodCategory','prodFrontUrl','prodBackUrl','prodFrontFile','prodBackFile'];
-  fields.forEach(id=>{
-    if(!document.getElementById(id)){
-      // create hidden if missing (shouldn't happen)
-      const el = document.createElement(id.startsWith('prod') && id.endsWith('File') ? 'input':'input');
-      el.id = id; if(id.endsWith('File')) el.type='file';
-      el.style.display='none';
-      document.body.appendChild(el);
+    function addToCart(i){
+      cart.push(products[i]);
+      document.getElementById("cartCount").innerText=cart.length;
     }
-  });
-})();
-</script>
+
+    function openCart(){
+      document.getElementById("cartModal").style.display="flex";
+      const list=document.getElementById("cartItems");
+      list.innerHTML="";
+      cart.forEach((c,i)=>{
+        list.innerHTML+=`<p>${c.name} - $${c.price} <button onclick="removeFromCart(${i})">x</button></p>`;
+      });
+      document.getElementById("cartTotal").innerText=cart.reduce((t,p)=>t+p.price,0);
+    }
+    function closeCart(){document.getElementById("cartModal").style.display="none";}
+    function removeFromCart(i){cart.splice(i,1);openCart();document.getElementById("cartCount").innerText=cart.length;}
+
+    function checkout(){
+      const total=cart.reduce((t,p)=>t+p.price,0);
+      const items=cart.map(p=>p.name).join(", ");
+      const msg=`Hello, I'd like to order: ${items}. Total: $${total}. I will pay via Mobile Money.`;
+      window.open(`https://wa.me/231776839092?text=${encodeURIComponent(msg)}`,"_blank");
+    }
+
+    function showAdmin(){
+      const pass=prompt("Enter password:");
+      if(pass==="78847@june"){document.getElementById("adminPanel").style.display="block";}
+    }
+    function saveProduct(){
+      const p={
+        name:document.getElementById("prodName").value,
+        category:document.getElementById("prodCategory").value,
+        desc:document.getElementById("prodDesc").value,
+        price:parseFloat(document.getElementById("prodPrice").value),
+        front:document.getElementById("prodFront").value,
+        back:document.getElementById("prodBack").value
+      };
+      products.push(p);
+      localStorage.setItem("products",JSON.stringify(products));
+      alert("Product saved!");
+      renderProducts();renderCategories();renderAdminProducts();
+    }
+    function renderAdminProducts(){
+      const box=document.getElementById("adminProducts");
+      box.innerHTML="";
+      products.forEach((p,i)=>{
+        box.innerHTML+=`<p>${p.name} <button onclick="deleteProduct(${i})">Delete</button></p>`;
+      });
+    }
+    function deleteProduct(i){
+      products.splice(i,1);
+      localStorage.setItem("products",JSON.stringify(products));
+      renderProducts();renderCategories();renderAdminProducts();
+      alert("Product deleted.");
+    }
+
+    renderProducts();renderCategories();renderAdminProducts();
+  </script>
 </body>
 </html>
