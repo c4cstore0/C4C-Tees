@@ -2,33 +2,132 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>C4C Tees</title>
 <style>
-:root{--gold:#ffd700;--black:#000;--white:#fff;--muted:#555;--card-shadow:0 6px 24px rgba(11,11,11,0.08);--radius:12px;}
+:root{
+  --gold:#ffd700;
+  --black:#111;
+  --white:#fff;
+  --muted:#555;
+  --card-shadow:0 6px 24px rgba(11,11,11,0.08);
+  --radius:12px;
+}
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif;}
 body{background:#fff;color:#111;}
 a{text-decoration:none;color:inherit;}
-.topbar{display:flex;align-items:center;padding:12px 20px;background:#111;color:var(--gold);}
-.logo-placeholder{width:50px;height:50px;background:var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#111;}
-.brand-title{font-size:26px;margin-left:10px;}
-.brand-sub{font-size:14px;color:#ddd;margin-left:10px;}
-.hero{padding:20px;text-align:center;}
-.hero h1{font-size:36px;margin-bottom:6px;}
-.tagline{font-size:14px;color:#555;margin-bottom:12px;}
-.btn{background:var(--gold);color:#111;padding:10px 16px;border:none;border-radius:10px;font-weight:700;cursor:pointer;}
-.btn.secondary{background:#fff;border:1px solid #eee;}
-.filters{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;justify-content:center;}
-.filter{padding:8px 12px;border-radius:999px;border:1px solid #eee;cursor:pointer;}
-.filter.active{background:var(--gold);color:#111;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;padding:0 16px;}
-.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #eee;box-shadow:var(--card-shadow);transition:transform .2s;}
-.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(11,11,11,0.12);}
-.card-media{position:relative;width:100%;padding-top:120%;perspective:1000px;cursor:pointer;}
-.card-media-inner{position:absolute;inset:0;transition:transform .6s;transform-style:preserve-3d;}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  padding:12px 20px;
+  background:#111;
+  color:var(--gold);
+}
+.logo-placeholder{
+  width:50px;
+  height:50px;
+  background:var(--gold);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  color:#111;
+}
+.brand-title{
+  font-size:26px;
+  margin-left:10px;
+}
+.brand-sub{
+  font-size:14px;
+  color:#ddd;
+  margin-left:10px;
+}
+
+.hero{
+  padding:20px;
+  text-align:center;
+}
+.hero h1{
+  font-size:36px;
+  margin-bottom:6px;
+}
+.tagline{
+  font-size:14px;
+  color:#555;
+  margin-bottom:12px;
+}
+.btn{
+  background:var(--gold);
+  color:#111;
+  padding:10px 16px;
+  border:none;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px 0;
+  justify-content:center;
+}
+.filter{
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid #eee;
+  cursor:pointer;
+}
+.filter.active{
+  background:var(--gold);
+  color:#111;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
+  padding:0 16px;
+  margin-bottom:20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid #eee;
+  box-shadow:var(--card-shadow);
+  transition:transform .2s;
+}
+.card:hover{transform:translateY(-4px);}
+
+.card-media{
+  position:relative;
+  width:100%;
+  padding-top:120%;
+  perspective:1000px;
+  cursor:pointer;
+}
+.card-media-inner{
+  position:absolute;
+  inset:0;
+  transition:transform .6s;
+  transform-style:preserve-3d;
+}
 .card-media.flipped .card-media-inner{transform:rotateY(180deg);}
-.card-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:var(--radius);}
+.card-media img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:var(--radius);
+}
 .card-media img.back{transform:rotateY(180deg);}
+
 .card-body{padding:12px;}
 .card-body h3{font-size:18px;margin:6px 0;}
 .card-body .desc{color:var(--muted);font-size:14px;}
@@ -36,10 +135,35 @@ a{text-decoration:none;color:inherit;}
 .card-actions{display:flex;gap:10px;margin-top:12px;}
 .cart-list{margin-top:12px;}
 .cart-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #eee;}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:1500;}
-.modal-box{background:#fff;width:100%;max-width:560px;border-radius:14px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,0.12);max-height:90vh;overflow:auto;}
-.admin-trigger{position:fixed;right:12px;bottom:12px;background:#111;border:1px solid #111;padding:6px 8px;border-radius:999px;font-size:12px;cursor:pointer;color:#111;opacity:0.2;z-index:3000;}
-.admin-panel{display:none;position:fixed;right:0;bottom:0;width:100%;max-height:85vh;z-index:2500;background:#111;color:#fff;border-top:4px solid var(--gold);overflow:auto;}
+
+.admin-trigger{
+  position:fixed;
+  right:12px;
+  bottom:12px;
+  background:#111;
+  border:1px solid #111;
+  padding:6px 8px;
+  border-radius:999px;
+  font-size:12px;
+  cursor:pointer;
+  color:#111;
+  opacity:0.1;
+  z-index:3000;
+}
+
+.admin-panel{
+  display:none;
+  position:fixed;
+  right:0;
+  bottom:0;
+  width:100%;
+  max-height:85vh;
+  z-index:2500;
+  background:#111;
+  color:#fff;
+  border-top:4px solid var(--gold);
+  overflow:auto;
+}
 .admin-inner{max-width:1200px;margin:0 auto;padding:18px;display:flex;gap:18px;flex-wrap:wrap;}
 .admin-form{flex:1;min-width:280px;}
 .input,textarea,select{width:100%;padding:10px;border-radius:8px;border:1px solid #444;margin-top:6px;background:#222;color:#fff;}
@@ -61,19 +185,10 @@ a{text-decoration:none;color:inherit;}
 <section class="hero">
   <h1>C4C Tees</h1>
   <div class="tagline">Premium Cotton Tees — Bold Designs for Your Faith & Vibe.</div>
-  <button class="btn" onclick="document.getElementById('gridScrollTarget').scrollIntoView({behavior:'smooth'})">Shop Now</button>
 </section>
 
 <div class="filters" id="filters"></div>
 <div class="grid" id="grid"></div>
-
-<div class="modal" id="cartModal">
-  <div class="modal-box">
-    <h3>Your Cart</h3>
-    <div class="cart-list" id="cartList"></div>
-    <button class="tool-btn" onclick="closeCart()">Close</button>
-  </div>
-</div>
 
 <button class="admin-trigger" id="adminTrigger">A</button>
 <div class="admin-panel" id="adminPanel">
@@ -83,6 +198,7 @@ a{text-decoration:none;color:inherit;}
       <div class="label">Categories</div>
       <div id="adminCategories"></div>
       <button class="tool-btn" onclick="addCategory()">Add Category</button>
+
       <div class="label">Add Product</div>
       <input class="input" id="prodName" placeholder="Product Name">
       <textarea class="input" id="prodDesc" rows="3" placeholder="Description"></textarea>
@@ -91,6 +207,7 @@ a{text-decoration:none;color:inherit;}
       <input class="input" id="prodFrontUrl" placeholder="Front Image URL">
       <input class="input" id="prodBackUrl" placeholder="Back Image URL">
       <button class="btn" onclick="saveProduct()">Save Product</button>
+
       <div class="admin-list" id="adminList"></div>
     </div>
   </div>
@@ -99,12 +216,12 @@ a{text-decoration:none;color:inherit;}
 <script>
 let categories = ["All","Tees","Hoodies","Kids"];
 let products = [
-  {name:"Jesus Is King Tee",desc:"Bold faith tee.",price:20,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Tees"},
-  {name:"Holy Spirit Tee",desc:"Feel the Spirit.",price:22,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Tees"},
-  {name:"Faith Hoodie",desc:"Stay warm in faith.",price:35,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Hoodies"},
-  {name:"Kids Prayer Tee",desc:"Cute and spiritual.",price:18,front:"https://via.placeholder.com/300x400?text=Front",back:"https://via.placeholder.com/300x400?text=Back",category:"Kids"}
+  {name:"Jesus Is King Tee",desc:"Bold faith tee.",price:20,front:"https://via.placeholder.com/300x400?text=Front+1",back:"https://via.placeholder.com/300x400?text=Back+1",category:"Tees"},
+  {name:"Holy Spirit Tee",desc:"Feel the Spirit.",price:22,front:"https://via.placeholder.com/300x400?text=Front+2",back:"https://via.placeholder.com/300x400?text=Back+2",category:"Tees"},
+  {name:"Faith Hoodie",desc:"Stay warm in faith.",price:35,front:"https://via.placeholder.com/300x400?text=Front+3",back:"https://via.placeholder.com/300x400?text=Back+3",category:"Hoodies"},
+  {name:"Kids Prayer Tee",desc:"Cute and spiritual.",price:18,front:"https://via.placeholder.com/300x400?text=Front+4",back:"https://via.placeholder.com/300x400?text=Back+4",category:"Kids"}
 ];
-let cart = [];
+
 let selectedCategory = "All";
 
 // Render filters
@@ -138,32 +255,18 @@ function renderGrid(){
     const h3 = document.createElement("h3"); h3.innerText=p.name;
     const d = document.createElement("div"); d.className="desc"; d.innerText=p.desc;
     const pr = document.createElement("div"); pr.className="price"; pr.innerText="$"+p.price;
-    const actions = document.createElement("div"); actions.className="card-actions";
-    const addBtn = document.createElement("button"); addBtn.className="small-btn"; addBtn.innerText="Add to Cart"; addBtn.onclick=()=>{cart.push(p);renderCart();}
-    actions.appendChild(addBtn);
-    body.appendChild(h3); body.appendChild(d); body.appendChild(pr); body.appendChild(actions);
+    body.appendChild(h3); body.appendChild(d); body.appendChild(pr);
     card.appendChild(body);
     g.appendChild(card);
   });
 }
-
-// Cart
-function renderCart(){
-  const cl = document.getElementById("cartList"); cl.innerHTML="";
-  cart.forEach((p,i)=>{
-    const row = document.createElement("div"); row.className="cart-row";
-    row.innerHTML=`<span>${p.name}</span><span>$${p.price}</span>`;
-    cl.appendChild(row);
-  });
-}
-function openCart(){document.getElementById("cartModal").style.display="flex";}
-function closeCart(){document.getElementById("cartModal").style.display="none";}
 
 // Admin
 document.getElementById("adminTrigger").onclick=()=>{
   const pass=prompt("Enter admin password:");
   if(pass==="78847@june"){document.getElementById("adminPanel").style.display="block";}
 }
+
 function addCategory(){
   const name=prompt("New category name:"); if(name){categories.push(name);renderFilters();updateCategorySelect();updateAdminCategories();}
 }
@@ -201,5 +304,6 @@ function updateAdminList(){
 // Init
 renderFilters(); renderGrid(); updateCategorySelect(); updateAdminCategories(); updateAdminList();
 </script>
+
 </body>
 </html>
